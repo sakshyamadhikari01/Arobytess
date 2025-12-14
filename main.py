@@ -11,12 +11,12 @@ import numpy as np
 from io import BytesIO
 from PIL import Image
 
-# Load TensorFlow and model
+
 import tensorflow as tf
 
 app = FastAPI(title="Gaun Roots API")
 
-# Load the plant disease detection model
+
 MODEL_PATH = os.path.join(os.path.dirname(__file__), "plant.keras")
 plant_model = None
 CLASS_NAMES = ["diseased", "healthy"]  # Based on binary classification from notebook
@@ -31,7 +31,6 @@ def load_model():
             print(f"Error loading model: {e}")
     return plant_model
 
-# Preload model on startup
 load_model()
 
 app.add_middleware(
@@ -79,29 +78,22 @@ class ProductCreate(BaseModel):
     phone: str
 
 class ImageData(BaseModel):
-    image: str  # Base64 encoded image
+    image: str
 
 def preprocess_image(image_data: str) -> np.ndarray:
-    """Preprocess image for model prediction - matches notebook preprocessing"""
-    # Remove data URL prefix if present
     if ',' in image_data:
         image_data = image_data.split(',')[1]
     
-    # Decode base64 image
     image_bytes = base64.b64decode(image_data)
     image = Image.open(BytesIO(image_bytes))
     
-    # Convert to RGB if necessary
     if image.mode != 'RGB':
         image = image.convert('RGB')
     
-    # Resize to model input size (160x160 as per notebook)
     image = image.resize((160, 160))
     
-    # Convert to numpy array
     img_array = np.array(image, dtype=np.float32)
     
-    # Add batch dimension
     img_array = np.expand_dims(img_array, axis=0)
     
     return img_array
@@ -114,14 +106,11 @@ async def predict_plant_disease(data: ImageData):
         raise HTTPException(status_code=500, detail="Model not loaded")
     
     try:
-        # Preprocess image
         processed_image = preprocess_image(data.image)
         
-        # Make prediction
         prediction = model.predict(processed_image, verbose=0)
         confidence = float(prediction[0][0])
         
-        # Binary classification: < 0.5 = diseased, >= 0.5 = healthy
         is_healthy = confidence >= 0.5
         
         return {
