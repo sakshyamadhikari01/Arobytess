@@ -6,57 +6,61 @@
     <title>Gaun Roots - Empowering Rural Agriculture</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Amarna:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <!-- Slider Menu -->
+    <div class="fullpage-menu" id="fullpageMenu">
+        <button class="fullpage-close" id="fullpageClose">✕</button>
+        <ul class="fullpage-nav">
+            <li><a href="#">AI Detection</a></li>
+            <li><a href="fertilizers.html">Find Fertilizers</a></li>
+            <li><a href="#">Agro Blogs</a></li>
+            <li><a href="#">Community</a></li>
+            <li><a href="#">Profile</a></li>
+        </ul>
+    </div>
+
     <div class="slider-menu" id="sliderMenu">
         <div class="slider-header">
             <span class="slider-title">Menu</span>
-            <button class="slider-close" id="sliderClose">
-                X
-            </button>
+            <button class="slider-close" id="sliderClose">X</button>
         </div>
         <ul class="slider-nav">
             <li><a href="#">AI Detection</a></li>
-            <li><a href="#">Find Fertilizers</a></li>
+            <li><a href="fertilizers.html">Find Fertilizers</a></li>
             <li><a href="#">Agro Blogs</a></li>
             <li><a href="#">Community</a></li>
-            <li><a href="#">About</a></li>
             <li><a href="#">Profile</a></li>
         </ul>
     </div>
     <div class="slider-overlay" id="sliderOverlay"></div>
 
-    <!-- Menu Toggle Button (3 lines) -->
-    <button class="menu-toggle" id="menuToggle">
-        ☰
-    </button>
+    <button class="menu-toggle" id="menuToggle">☰</button>
 
     <nav class="navbar">
         <div class="nav-container">
-            <a href="#" class="logo">
-                Gaun Roots
-            </a>
-            <button class="nav-toggle" id="navToggle">
-                ☰
-            </button>
+            <a href="#" class="logo"><img src="images/groot.png" alt="Gaun Roots Logo" class="logo-img">Gaun Roots</a>
+            <button class="nav-toggle" id="navToggle">☰</button>
             <ul class="nav-menu" id="navMenu">
                 <li><a href="#home" class="nav-link active">Home</a></li>
+                <li><a href="#" class="nav-link">AI Detection</a></li>
+                <li><a href="fertilizers.html" class="nav-link">Find Fertilizers</a></li>
+                <li><a href="#" class="nav-link">Agro Blogs</a></li>
+                <li><a href="#" class="nav-link">Community</a></li>
+                <li><a href="#" class="nav-link">Profile</a></li>
             </ul>
         </div>
     </nav>
 
     <section id="home" class="hero">
-        <img src="images/flower1.png" alt="" class="hero-flower hero-flower-left">
-        <img src="images/flower1.png" alt="" class="hero-flower hero-flower-right">
+        <img src="images/white.png" alt="" class="hero-flower hero-flower-single">
         <div class="hero-content">
             <h1>Welcome to Gaun Roots</h1>
             <p class="hero-tagline">Empowering Rural Agriculture, One Village at a Time</p>
             <p class="hero-subtitle">Connecting farmers with modern tools, knowledge, and resources to grow sustainably</p>
             <div class="hero-buttons">
-                <a href="#" class="btn btn-primary">Get Started</a>
+                <a href="#" class="btn btn-primary" id="getStartedBtn">Get Started</a>
                 <a href="#" class="btn btn-outline">Learn More</a>
             </div>
         </div>
@@ -80,49 +84,62 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Ky.</p>
+                <p>Kya dekh rahe ho....haa?.</p>
             </div>
         </div>
     </footer>
 
-    <script>
-        const navToggle = document.getElementById('navToggle');
-        const navMenu = document.getElementById('navMenu');
-        
-        navToggle.addEventListener('click', () => {
-            navMenu.classList.toggle('active');
-        });
+<script>
+var navToggle = document.getElementById('navToggle');
+var navMenu = document.getElementById('navMenu');
 
-        window.addEventListener('scroll', () => {
-            const navbar = document.querySelector('.navbar');
-            if (window.scrollY > 50) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
-            }
-        });
+navToggle.addEventListener('click', function() {
+    navMenu.classList.toggle('active');
+});
 
-    
-        const menuToggle = document.getElementById('menuToggle');
-        const sliderMenu = document.getElementById('sliderMenu');
-        const sliderClose = document.getElementById('sliderClose');
-        const sliderOverlay = document.getElementById('sliderOverlay');
+window.addEventListener('scroll', function() {
+    var navbar = document.querySelector('.navbar');
+    if(window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+    } else {
+        navbar.classList.remove('scrolled');
+    }
+});
 
-        menuToggle.addEventListener('click', () => {
-            sliderMenu.classList.add('active');
-            sliderOverlay.classList.add('active');
-        });
+var menuToggle = document.getElementById('menuToggle');
+var sliderMenu = document.getElementById('sliderMenu');
+var sliderClose = document.getElementById('sliderClose');
+var sliderOverlay = document.getElementById('sliderOverlay');
 
-        sliderClose.addEventListener('click', () => {
-            sliderMenu.classList.remove('active');
-            sliderOverlay.classList.remove('active');
-        });
+function openMenu() {
+    sliderMenu.classList.add('active');
+    sliderOverlay.classList.add('active');
+}
 
-        sliderOverlay.addEventListener('click', () => {
-            sliderMenu.classList.remove('active');
-            sliderOverlay.classList.remove('active');
-        });
-    </script>
+function closeMenu() {
+    sliderMenu.classList.remove('active');
+    sliderOverlay.classList.remove('active');
+}
+
+menuToggle.addEventListener('click', openMenu);
+sliderClose.addEventListener('click', closeMenu);
+sliderOverlay.addEventListener('click', closeMenu);
+
+var getStartedBtn = document.getElementById('getStartedBtn');
+var fullpageMenu = document.getElementById('fullpageMenu');
+var fullpageClose = document.getElementById('fullpageClose');
+
+getStartedBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    fullpageMenu.classList.add('active');
+    document.body.style.overflow = 'hidden';
+});
+
+fullpageClose.addEventListener('click', function() {
+    fullpageMenu.classList.remove('active');
+    document.body.style.overflow = '';
+});
+</script>
 
 </body>
 </html>
