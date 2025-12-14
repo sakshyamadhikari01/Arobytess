@@ -10,16 +10,21 @@ import base64
 import numpy as np
 from io import BytesIO
 from PIL import Image
-
+import requests
+from dotenv import load_dotenv
+import smtplib
+from email.mime.text import MIMEText
 
 import tensorflow as tf
+
+load_dotenv()
 
 app = FastAPI(title="Gaun Roots API")
 
 
 MODEL_PATH = os.path.join(os.path.dirname(__file__), "plant.keras")
 plant_model = None
-CLASS_NAMES = ["diseased", "healthy"]  # Based on binary classification from notebook
+CLASS_NAMES = ["diseased", "healthy"]
 
 def load_model():
     global plant_model
@@ -47,6 +52,12 @@ os.makedirs(DATA_DIR, exist_ok=True)
 
 USERS_FILE = os.path.join(DATA_DIR, "users.json")
 PRODUCTS_FILE = os.path.join(DATA_DIR, "products.json")
+ALERTS_FILE = os.path.join(DATA_DIR, "alert_registrations.json")
+DISEASE_REPORTS_FILE = os.path.join(DATA_DIR, "disease_reports.json")
+
+EMAIL_ADDRESS = os.getenv('EMAIL_ADDRESS')
+EMAIL_PASSWORD = os.getenv('EMAIL_PASSWORD')
+COMMUNITY_EMAIL = os.getenv('COMMUNITY_EMAIL')
 
 def load_data(filepath):
     if os.path.exists(filepath):
@@ -80,6 +91,25 @@ class ProductCreate(BaseModel):
 class ImageData(BaseModel):
     image: str
 
+class AlertRegistration(BaseModel):
+    farmerName: str
+    phoneNumber: str
+    cropTypes: str
+    alertRadius: int
+
+class DiseaseReport(BaseModel):
+    diseaseName: str
+    cropType: str
+    severity: str
+    description: Optional[str] = None
+    reporterPhone: str
+
+class EmailAlert(BaseModel):
+    email: str
+    disease: Optional[str] = "Late Blight"
+    crop: Optional[str] = "Tomato"
+    location: Optional[str] = "Kathmandu Valley"
+
 def preprocess_image(image_data: str) -> np.ndarray:
     if ',' in image_data:
         image_data = image_data.split(',')[1]
@@ -98,9 +128,172 @@ def preprocess_image(image_data: str) -> np.ndarray:
     
     return img_array
 
+@app.post("/api/register-alerts")
+async def register_for_alerts(registration: AlertRegistration):
+    try:
+        alerts = load_data(ALERTS_FILE)
+        existing = next((a for a in alerts if a["phoneNumber"] == registration.phoneNumber), None)
+        
+        auto_location = "Kathmandu Valley"
+        
+        if existing:
+            existing.update(registration.dict())
+            existing["location"] = auto_location
+            existing["updatedAt"] = "2024-12-14T00:00:00Z"
+        else:
+            new_registration = registration.dict()
+            new_registration["id"] = len(alerts) + 1
+            new_registration["location"] = auto_location
+            new_registration["registeredAt"] = "2024-12-14T00:00:00Z"
+            new_registration["isActive"] = True
+            alerts.append(new_registration)
+        
+        save_data(ALERTS_FILE, alerts)
+        
+        return {
+            "success": True,
+            "message": f"Successfully registered for disease alerts in {auto_location}",
+            "registration": new_registration if not existing else existing
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Registration failed: {str(e)}")
+
+@app.post("/api/report-disease")
+async def report_disease(report: DiseaseReport):
+    try:
+        reports = load_data(DISEASE_REPORTS_FILE)
+        
+        auto_location = "Kathmandu Valley"
+        
+        new_report = report.dict()
+        new_report["id"] = len(reports) + 1
+        new_report["location"] = auto_location
+        new_report["reportedAt"] = "2024-12-14T00:00:00Z"
+        new_report["status"] = "pending_verification"
+        
+        reports.append(new_report)
+        save_data(DISEASE_REPORTS_FILE, reports)
+        affected_farmers = await notify_nearby_farmers(auto_location, report.diseaseName, report.cropType)
+        
+        return {
+            "success": True,
+            "message": f"Disease report submitted for {auto_location}",
+            "report": new_report,
+            "notified_farmers": affected_farmers
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Report submission failed: {str(e)}")
+
+@app.post("/api/send-alert")
+async def send_alert(alert: EmailAlert):
+    try:
+        success = await send_email_alert(alert.email, alert.disease, alert.crop, alert.location)
+        
+        if success:
+            return {
+                "success": True,
+                "message": f"Alert sent to {alert.email}!",
+                "details": {
+                    "email": alert.email,
+                    "disease": alert.disease,
+                    "crop": alert.crop,
+                    "location": alert.location
+                }
+            }
+        else:
+            raise HTTPException(status_code=500, detail="Failed to send email")
+            
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Alert failed: {str(e)}")
+
+@app.post("/api/send-community-alert")
+async def send_community_alert():
+    try:
+        demo_disease = "Late Blight"
+        demo_crop = "Tomato"
+        demo_location = "Kathmandu Valley"
+        
+        notifications_sent = await notify_nearby_farmers(demo_location, demo_disease, demo_crop)
+        
+        return {
+            "success": True,
+            "message": "Community alert sent!",
+            "notifications_sent": notifications_sent
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Alert failed: {str(e)}")
+
+@app.get("/api/recent-alerts")
+async def get_recent_alerts(location: Optional[str] = None):
+    try:
+        reports = load_data(DISEASE_REPORTS_FILE)
+        
+        if location:
+            reports = [r for r in reports if location.lower() in r["location"].lower()]
+        
+        recent_reports = sorted(reports, key=lambda x: x["reportedAt"], reverse=True)[:10]
+        
+        return {
+            "success": True,
+            "alerts": recent_reports
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to fetch alerts: {str(e)}")
+
+async def send_email_alert(email: str, disease_name: str, crop_type: str, location: str) -> bool:
+    if not EMAIL_ADDRESS or not EMAIL_PASSWORD:
+        print("Email not configured")
+        return False
+    
+    try:
+        subject = f"Disease Alert: {disease_name} in {crop_type}"
+        message = f"""
+Disease Alert - Gaun Roots
+
+Disease: {disease_name}
+Crop: {crop_type}
+Location: {location}
+
+Check your crops immediately and take preventive action.
+        """
+        
+        msg = MIMEText(message)
+        msg['Subject'] = subject
+        msg['From'] = EMAIL_ADDRESS
+        msg['To'] = email
+        
+        with smtplib.SMTP('smtp.gmail.com', 587) as server:
+            server.starttls()
+            server.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
+            server.send_message(msg)
+        
+        print(f"Email sent to {email}")
+        return True
+        
+    except Exception as e:
+        print(f"Email error: {e}")
+        return False
+
+
+
+async def notify_nearby_farmers(location: str, disease_name: str, crop_type: str):
+    try:
+        notifications_sent = 0
+        
+        if COMMUNITY_EMAIL:
+            success = await send_email_alert(COMMUNITY_EMAIL, disease_name, crop_type, location)
+            if success:
+                notifications_sent += 1
+                print(f"Community email sent to {COMMUNITY_EMAIL}")
+        
+        return notifications_sent
+        
+    except Exception as e:
+        print(f"Notification error: {e}")
+        return 0
+
 @app.post("/api/predict")
 async def predict_plant_disease(data: ImageData):
-    """Predict if plant is healthy or diseased"""
     model = load_model()
     if model is None:
         raise HTTPException(status_code=500, detail="Model not loaded")
