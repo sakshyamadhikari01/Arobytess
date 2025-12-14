@@ -67,6 +67,108 @@
     color: var(--primary-dark);
 }
 
+.notification-bar {
+    background: linear-gradient(135deg, #fff9e6 0%, #fff3cd 100%);
+    border: 2px solid #ffc107;
+    border-radius: 15px;
+    padding: 15px 20px;
+    margin-bottom: 25px;
+}
+
+.notification-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255, 193, 7, 0.3);
+}
+
+.notification-icon {
+    width: 20px;
+    height: 20px;
+    background: var(--primary-dark);
+    border-radius: 50%;
+    position: relative;
+}
+
+.notification-title {
+    font-weight: 600;
+    color: var(--primary-dark);
+    flex: 1;
+}
+
+.notification-count {
+    background: #dc3545;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 12px;
+    min-width: 20px;
+    text-align: center;
+}
+
+.notification-count.zero {
+    background: #6c757d;
+}
+
+.notification-list {
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+.notification-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 8px;
+    margin-bottom: 8px;
+    transition: background 0.3s;
+}
+
+.notification-item:hover {
+    background: rgba(255, 255, 255, 0.9);
+}
+
+.notification-item:last-child {
+    margin-bottom: 0;
+}
+
+.notification-item .notif-icon {
+    width: 8px;
+    height: 8px;
+    background: var(--primary-dark);
+    border-radius: 50%;
+    margin-top: 6px;
+    flex-shrink: 0;
+}
+
+.notification-item .notif-content {
+    flex: 1;
+}
+
+.notification-item .notif-text {
+    font-size: 0.9rem;
+    color: var(--text-dark);
+    margin-bottom: 3px;
+}
+
+.notification-item .notif-time {
+    font-size: 0.75rem;
+    color: var(--text-light);
+}
+
+.empty-notification {
+    color: var(--text-light);
+    text-align: center;
+    padding: 10px;
+    font-style: italic;
+    font-size: 0.9rem;
+}
+
 .profile-stats {
     display: flex;
     gap: 20px;
@@ -288,16 +390,13 @@
     .profile-card {
         padding: 30px 20px;
     }
-
     .profile-stats {
         flex-direction: column;
         gap: 15px;
     }
-
     .profile-actions {
         flex-direction: column;
     }
-
     .stat-value {
         font-size: 2rem;
     }

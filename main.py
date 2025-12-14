@@ -6,8 +6,33 @@ from pydantic import BaseModel
 from typing import Optional
 import json
 import os
+import base64
+import numpy as np
+from io import BytesIO
+from PIL import Image
+
+# Load TensorFlow and model
+import tensorflow as tf
 
 app = FastAPI(title="Gaun Roots API")
+
+# Load the plant disease detection model
+MODEL_PATH = os.path.join(os.path.dirname(__file__), "plant.keras")
+plant_model = None
+CLASS_NAMES = ["diseased", "healthy"]  # Based on binary classification from notebook
+
+def load_model():
+    global plant_model
+    if plant_model is None and os.path.exists(MODEL_PATH):
+        try:
+            plant_model = tf.keras.models.load_model(MODEL_PATH)
+            print("Plant disease model loaded successfully")
+        except Exception as e:
+            print(f"Error loading model: {e}")
+    return plant_model
+
+# Preload model on startup
+load_model()
 
 app.add_middleware(
     CORSMiddleware,
@@ -17,7 +42,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
+BASE_DIR = os.path.dirname(__file__)
+DATA_DIR = os.path.join(BASE_DIR, "data")
 os.makedirs(DATA_DIR, exist_ok=True)
 
 USERS_FILE = os.path.join(DATA_DIR, "users.json")
@@ -35,7 +61,7 @@ def save_data(filepath, data):
 
 class UserCreate(BaseModel):
     name: str
-    type: str  # farmer, vet, seller
+    type: str
 
 class UserLogin(BaseModel):
     name: str
@@ -52,15 +78,66 @@ class ProductCreate(BaseModel):
     type: str
     phone: str
 
+class ImageData(BaseModel):
+    image: str  # Base64 encoded image
+
+def preprocess_image(image_data: str) -> np.ndarray:
+    """Preprocess image for model prediction - matches notebook preprocessing"""
+    # Remove data URL prefix if present
+    if ',' in image_data:
+        image_data = image_data.split(',')[1]
+    
+    # Decode base64 image
+    image_bytes = base64.b64decode(image_data)
+    image = Image.open(BytesIO(image_bytes))
+    
+    # Convert to RGB if necessary
+    if image.mode != 'RGB':
+        image = image.convert('RGB')
+    
+    # Resize to model input size (160x160 as per notebook)
+    image = image.resize((160, 160))
+    
+    # Convert to numpy array
+    img_array = np.array(image, dtype=np.float32)
+    
+    # Add batch dimension
+    img_array = np.expand_dims(img_array, axis=0)
+    
+    return img_array
+
+@app.post("/api/predict")
+async def predict_plant_disease(data: ImageData):
+    """Predict if plant is healthy or diseased"""
+    model = load_model()
+    if model is None:
+        raise HTTPException(status_code=500, detail="Model not loaded")
+    
+    try:
+        # Preprocess image
+        processed_image = preprocess_image(data.image)
+        
+        # Make prediction
+        prediction = model.predict(processed_image, verbose=0)
+        confidence = float(prediction[0][0])
+        
+        # Binary classification: < 0.5 = diseased, >= 0.5 = healthy
+        is_healthy = confidence >= 0.5
+        
+        return {
+            "prediction": "healthy" if is_healthy else "diseased",
+            "confidence": confidence if is_healthy else (1 - confidence),
+            "raw_score": confidence
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Prediction error: {str(e)}")
+
 @app.post("/api/users/register")
 def register_user(user: UserCreate):
     users = load_data(USERS_FILE)
-    
-    # Check if user exists
     existing = next((u for u in users if u["name"].lower() == user.name.lower() and u["type"] == user.type), None)
     if existing:
         raise HTTPException(status_code=400, detail="User already exists")
-    
     new_user = {
         "id": len(users) + 1,
         "name": user.name,
@@ -94,12 +171,10 @@ def update_user(user_id: int, update: UserUpdate):
     user_idx = next((i for i, u in enumerate(users) if u["id"] == user_id), None)
     if user_idx is None:
         raise HTTPException(status_code=404, detail="User not found")
-    
     if update.credits is not None:
         users[user_idx]["credits"] = update.credits
     if update.friends is not None:
         users[user_idx]["friends"] = update.friends
-    
     save_data(USERS_FILE, users)
     return users[user_idx]
 
@@ -109,7 +184,6 @@ def add_credits(user_id: int, amount: int):
     user_idx = next((i for i, u in enumerate(users) if u["id"] == user_id), None)
     if user_idx is None:
         raise HTTPException(status_code=404, detail="User not found")
-    
     users[user_idx]["credits"] = users[user_idx].get("credits", 0) + amount
     save_data(USERS_FILE, users)
     return users[user_idx]
@@ -120,20 +194,16 @@ def add_friend(user_id: int, friend_name: str):
     user_idx = next((i for i, u in enumerate(users) if u["id"] == user_id), None)
     if user_idx is None:
         raise HTTPException(status_code=404, detail="User not found")
-    
     if "friends" not in users[user_idx]:
         users[user_idx]["friends"] = []
-    
     if friend_name not in users[user_idx]["friends"]:
         users[user_idx]["friends"].append(friend_name)
-    
     save_data(USERS_FILE, users)
     return users[user_idx]
 
 @app.get("/api/products")
 def get_products():
-    products = load_data(PRODUCTS_FILE)
-    return products
+    return load_data(PRODUCTS_FILE)
 
 @app.get("/api/products/seller/{seller_id}")
 def get_seller_products(seller_id: int):
@@ -143,7 +213,6 @@ def get_seller_products(seller_id: int):
 @app.post("/api/products")
 def create_product(product: ProductCreate, seller_id: int, seller_name: str):
     products = load_data(PRODUCTS_FILE)
-    
     new_product = {
         "id": len(products) + 1,
         "seller_id": seller_id,
@@ -176,7 +245,18 @@ def increment_view(product_id: int):
         return products[product_idx]
     raise HTTPException(status_code=404, detail="Product not found")
 
-app.mount("/", StaticFiles(directory="..", html=True), name="static")
+@app.get("/")
+async def serve_home():
+    return FileResponse(os.path.join(BASE_DIR, "templates", "home.html"))
+
+@app.get("/{page}.html")
+async def serve_page(page: str):
+    file_path = os.path.join(BASE_DIR, "templates", f"{page}.html")
+    if os.path.exists(file_path):
+        return FileResponse(file_path)
+    raise HTTPException(status_code=404, detail="Page not found")
+
+app.mount("/static", StaticFiles(directory=os.path.join(BASE_DIR, "static")), name="static")
 
 if __name__ == "__main__":
     import uvicorn

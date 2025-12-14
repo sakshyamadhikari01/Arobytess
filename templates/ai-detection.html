@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Plant Disease Detection - Gaun Roots</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="stylesheet" href="/static/css/ai-detection.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="slider-menu" id="sliderMenu">
+        <div class="slider-header">
+            <span class="slider-title">Menu</span>
+            <button class="slider-close" id="sliderClose">X</button>
+        </div>
+        <ul class="slider-nav">
+            <li><a href="home.html">Home</a></li>
+            <li><a href="ai-detection.html">AI Detection</a></li>
+            <li><a href="fertilizers.html">Find Fertilizers</a></li>
+            <li><a href="blogs.html">Agro Blogs</a></li>
+            <li><a href="community.html">Community</a></li>
+            <li><a href="profile.html">Profile</a></li>
+            <li><a href="login.html">Login</a></li>
+        </ul>
+    </div>
+    <div class="slider-overlay" id="sliderOverlay"></div>
+    <button class="menu-toggle" id="menuToggle">☰</button>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="home.html" class="logo"><img src="/static/images/groot.png" alt="Logo" class="logo-img">Gaun Roots</a>
+            <ul class="nav-menu">
+                <li><a href="home.html" class="nav-link">Home</a></li>
+                <li><a href="ai-detection.html" class="nav-link active">AI Detection</a></li>
+                <li><a href="fertilizers.html" class="nav-link">Find Fertilizers</a></li>
+                <li><a href="blogs.html" class="nav-link">Agro Blogs</a></li>
+                <li><a href="community.html" class="nav-link">Community</a></li>
+                <li><a href="profile.html" class="nav-link">Profile</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="detection-hero">
+        <div class="container">
+            <h1>🌿 Plant Disease Detection</h1>
+            <p>Upload an image or use your camera to detect plant diseases instantly</p>
+        </div>
+    </section>
+
+    <section class="detection-section">
+        <div class="container">
+            <div class="detection-card">
+                <div class="input-tabs">
+                    <button class="tab-btn active" data-tab="upload">📁 Upload Image</button>
+                    <button class="tab-btn" data-tab="camera">📷 Use Camera</button>
+                </div>
+
+                <div class="tab-content active" id="upload-tab">
+                    <div class="upload-area" id="uploadArea">
+                        <div class="upload-icon">🌱</div>
+                        <p>Drag & drop your plant image here</p>
+                        <span>or</span>
+                        <label class="upload-btn">
+                            Browse Files
+                            <input type="file" id="fileInput" accept="image/*" hidden>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="camera-tab">
+                    <div class="camera-container">
+                        <video id="cameraFeed" autoplay playsinline></video>
+                        <canvas id="cameraCanvas" style="display:none;"></canvas>
+                        <div class="camera-controls">
+                            <button class="btn btn-primary" id="startCamera">Start Camera</button>
+                            <button class="btn btn-primary" id="captureBtn" disabled>📸 Capture</button>
+                            <button class="btn btn-outline" id="switchCamera">🔄 Switch</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="preview-section" id="previewSection" style="display:none;">
+                    <h3>Preview</h3>
+                    <img id="previewImage" alt="Preview">
+                    <button class="btn btn-primary" id="analyzeBtn">🔍 Analyze Plant</button>
+                </div>
+            </div>
+
+            <div class="result-card" id="resultCard" style="display:none;">
+                <h2>Analysis Result</h2>
+                <div class="result-content">
+                    <div class="result-status" id="resultStatus"></div>
+                    <div class="confidence-bar">
+                        <div class="confidence-fill" id="confidenceFill"></div>
+                    </div>
+                    <p class="confidence-text">Confidence: <span id="confidenceValue">0%</span></p>
+                    <div class="result-details" id="resultDetails"></div>
+                </div>
+            </div>
+
+            <div class="loading-overlay" id="loadingOverlay" style="display:none;">
+                <div class="spinner"></div>
+                <p>Analyzing your plant...</p>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3>Gaun Roots</h3>
+                    <p>Empowering rural agriculture through technology</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/static/js/ai-detection.js"></script>
+</body>
+</html>

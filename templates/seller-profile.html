@@ -4,19 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Seller Dashboard - Gaun Roots</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="seller-profile.css">
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="stylesheet" href="/static/css/seller-profile.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Amarna:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
 </head>
 <body>
     <nav class="navbar">
         <div class="nav-container">
-            <a href="home.html" class="logo"><img src="images/groot.png" alt="Gaun Roots Logo" class="logo-img">Gaun Roots</a>
+            <a href="home.html" class="logo"><img src="/static/images/groot.png" alt="Gaun Roots Logo" class="logo-img">Gaun Roots</a>
             <ul class="nav-menu" id="navMenu">
                 <li><a href="home.html" class="nav-link">Home</a></li>
                 <li><a href="fertilizers.html" class="nav-link">Find Fertilizers</a></li>
                 <li><a href="blogs.html" class="nav-link">Agro Blogs</a></li>
+                <li><a href="community.html" class="nav-link">Community</a></li>
                 <li><a href="seller-profile.html" class="nav-link active">Profile</a></li>
                 <li><a href="login.html" class="nav-link">Login</a></li>
             </ul>
@@ -58,7 +59,6 @@
             </div>
         </div>
 
-        <!-- Add Product Modal -->
         <div class="modal" id="addProductModal">
             <div class="modal-content">
                 <button class="modal-close" id="modalClose">✕</button>
@@ -97,8 +97,8 @@
         <div class="modal-overlay" id="modalOverlay"></div>
     </div>
 
-    <script src="api.js"></script>
-    <script src="auth.js"></script>
+    <script src="/static/js/api.js"></script>
+    <script src="/static/js/auth.js"></script>
     <script>
         var currentUser = getCurrentUser();
         
@@ -126,18 +126,7 @@
                     grid.innerHTML = '<div class="empty-state"><p>No products added yet. Start promoting your fertilizers!</p></div>';
                 } else {
                     grid.innerHTML = myProducts.map(function(product) {
-                        return '<div class="product-card">' +
-                            '<div class="product-header">' +
-                                '<h3>' + product.name + '</h3>' +
-                                '<span class="product-type">' + product.type + '</span>' +
-                            '</div>' +
-                            '<p class="product-desc">' + product.description + '</p>' +
-                            '<div class="product-footer">' +
-                                '<span class="product-price">Rs. ' + product.price + '</span>' +
-                                '<span class="product-views">' + (product.views || 0) + ' views</span>' +
-                            '</div>' +
-                            '<button class="btn-delete" onclick="deleteProduct(' + product.id + ')">Delete</button>' +
-                        '</div>';
+                        return '<div class="product-card"><div class="product-header"><h3>' + product.name + '</h3><span class="product-type">' + product.type + '</span></div><p class="product-desc">' + product.description + '</p><div class="product-footer"><span class="product-price">Rs. ' + product.price + '</span><span class="product-views">' + (product.views || 0) + ' views</span></div><button class="btn-delete" onclick="deleteProduct(' + product.id + ')">Delete</button></div>';
                     }).join('');
                 }
             } catch (err) {

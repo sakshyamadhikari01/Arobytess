@@ -4,20 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile - Gaun Roots</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="profile.css">
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="stylesheet" href="/static/css/profile.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Amarna:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
 </head>
 <body>
     <nav class="navbar">
         <div class="nav-container">
-            <a href="home.html" class="logo"><img src="images/groot.png" alt="Gaun Roots Logo" class="logo-img">Gaun Roots</a>
+            <a href="home.html" class="logo"><img src="/static/images/groot.png" alt="Gaun Roots Logo" class="logo-img">Gaun Roots</a>
             <ul class="nav-menu" id="navMenu">
                 <li><a href="home.html" class="nav-link">Home</a></li>
                 <li><a href="#" class="nav-link">AI Detection</a></li>
                 <li><a href="fertilizers.html" class="nav-link">Find Fertilizers</a></li>
                 <li><a href="blogs.html" class="nav-link">Agro Blogs</a></li>
+                <li><a href="community.html" class="nav-link">Community</a></li>
                 <li><a href="profile.html" class="nav-link active">Profile</a></li>
                 <li><a href="login.html" class="nav-link">Login</a></li>
             </ul>
@@ -32,6 +33,17 @@
                 </div>
                 <h1 id="profileName">Guest User</h1>
                 <span class="user-badge" id="userBadge">Farmer</span>
+            </div>
+
+            <div class="notification-bar" id="notificationBar">
+                <div class="notification-header">
+                    <span class="notification-icon"></span>
+                    <span class="notification-title">Notifications</span>
+                    <span class="notification-count" id="notificationCount">0</span>
+                </div>
+                <div class="notification-list" id="notificationList">
+                    <p class="empty-notification">No new notifications</p>
+                </div>
             </div>
 
             <div class="profile-stats">
@@ -62,7 +74,6 @@
             </div>
         </div>
 
-        <!-- Add Friend Modal -->
         <div class="modal" id="addFriendModal">
             <div class="modal-content">
                 <button class="modal-close" id="friendModalClose">✕</button>
@@ -79,8 +90,8 @@
         <div class="modal-overlay" id="modalOverlay"></div>
     </div>
 
-    <script src="api.js"></script>
-    <script src="auth.js"></script>
+    <script src="/static/js/api.js"></script>
+    <script src="/static/js/auth.js"></script>
     <script>
         var currentUser = getCurrentUser();
         var isLoggedIn = !!currentUser;
@@ -195,6 +206,43 @@
             }
             window.location.href = 'login.html';
         });
+
+        function loadNotifications() {
+            var notifications = JSON.parse(localStorage.getItem('notifications_' + (currentUser ? currentUser.id : 'guest'))) || [];
+            var notificationList = document.getElementById('notificationList');
+            var notificationCount = document.getElementById('notificationCount');
+            
+            if (notifications.length === 0) {
+                notificationList.innerHTML = '<p class="empty-notification">No new notifications</p>';
+                notificationCount.textContent = '0';
+                notificationCount.classList.add('zero');
+            } else {
+                notificationCount.textContent = notifications.length;
+                notificationCount.classList.remove('zero');
+                notificationList.innerHTML = notifications.map(function(notif) {
+                    return '<div class="notification-item"><span class="notif-icon">' + notif.icon + '</span><div class="notif-content"><div class="notif-text">' + notif.message + '</div><div class="notif-time">' + notif.time + '</div></div></div>';
+                }).join('');
+            }
+        }
+
+        function addSampleNotifications() {
+            if (!currentUser) return;
+            var key = 'notifications_' + currentUser.id;
+            var existing = localStorage.getItem(key);
+            if (!existing) {
+                var sampleNotifs = [
+                    { icon: '', message: 'Welcome to Gaun Roots! Start exploring.', time: 'Just now' },
+                    { icon: '', message: 'Check out new fertilizer deals in your area.', time: '2 hours ago' },
+                    { icon: '', message: 'New blog post about crop diseases.', time: '1 day ago' }
+                ];
+                localStorage.setItem(key, JSON.stringify(sampleNotifs));
+            }
+        }
+
+        if (isLoggedIn) {
+            addSampleNotifications();
+        }
+        loadNotifications();
     </script>
 </body>
 </html>

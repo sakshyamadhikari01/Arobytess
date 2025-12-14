@@ -4,19 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gaun Roots - Empowering Rural Agriculture</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="/static/css/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Amarna:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
 </head>
 <body>
-
     <div class="fullpage-menu" id="fullpageMenu">
         <button class="fullpage-close" id="fullpageClose">✕</button>
         <ul class="fullpage-nav">
             <li><a href="home.html">Home</a></li>
-            <li><a href="#">AI Detection</a></li>
+            <li><a href="ai-detection.html">AI Detection</a></li>
             <li><a href="fertilizers.html">Find Fertilizers</a></li>
             <li><a href="blogs.html">Agro Blogs</a></li>
+            <li><a href="community.html">Community</a></li>
             <li><a href="profile.html">Profile</a></li>
             <li><a href="login.html">Login</a></li>
         </ul>
@@ -29,9 +29,10 @@
         </div>
         <ul class="slider-nav">
             <li><a href="home.html">Home</a></li>
-            <li><a href="#">AI Detection</a></li>
+            <li><a href="ai-detection.html">AI Detection</a></li>
             <li><a href="fertilizers.html">Find Fertilizers</a></li>
             <li><a href="blogs.html">Agro Blogs</a></li>
+            <li><a href="community.html">Community</a></li>
             <li><a href="profile.html">Profile</a></li>
             <li><a href="login.html">Login</a></li>
         </ul>
@@ -42,13 +43,14 @@
 
     <nav class="navbar">
         <div class="nav-container">
-            <a href="#" class="logo"><img src="images/groot.png" alt="Gaun Roots Logo" class="logo-img">Gaun Roots</a>
+            <a href="#" class="logo"><img src="/static/images/groot.png" alt="Gaun Roots Logo" class="logo-img">Gaun Roots</a>
             <button class="nav-toggle" id="navToggle">☰</button>
             <ul class="nav-menu" id="navMenu">
                 <li><a href="#home" class="nav-link active">Home</a></li>
-                <li><a href="#" class="nav-link">AI Detection</a></li>
+                <li><a href="ai-detection.html" class="nav-link">AI Detection</a></li>
                 <li><a href="fertilizers.html" class="nav-link">Find Fertilizers</a></li>
                 <li><a href="blogs.html" class="nav-link">Agro Blogs</a></li>
+                <li><a href="community.html" class="nav-link">Community</a></li>
                 <li><a href="profile.html" class="nav-link">Profile</a></li>
                 <li><a href="login.html" class="nav-link">Login</a></li>
             </ul>
@@ -56,7 +58,7 @@
     </nav>
 
     <section id="home" class="hero">
-        <img src="images/white.png" alt="" class="hero-flower hero-flower-single">
+        <img src="/static/images/white.png" alt="" class="hero-flower hero-flower-single">
         <div class="hero-content">
             <h1>Welcome to Gaun Roots</h1>
             <p class="hero-tagline">Empowering Rural Agriculture, One Village at a Time</p>
@@ -91,7 +93,7 @@
         </div>
     </footer>
 
-<script src="auth.js"></script>
+<script src="/static/js/auth.js"></script>
 <script>
 var navToggle = document.getElementById('navToggle');
 var navMenu = document.getElementById('navMenu');
@@ -161,6 +163,5 @@ sliderLinks.forEach(function(link) {
     });
 });
 </script>
-
 </body>
 </html>

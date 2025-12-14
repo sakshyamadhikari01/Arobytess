@@ -308,11 +308,9 @@
         height: auto;
         padding: 30px 20px;
     }
-
     .seller-container {
         flex-direction: column;
     }
-
     .seller-main {
         margin-left: 0;
         padding: 30px 20px;
@@ -325,11 +323,9 @@
         gap: 15px;
         align-items: flex-start;
     }
-
     .products-grid {
         grid-template-columns: 1fr;
     }
-
     .modal {
         padding: 30px 20px;
     }
