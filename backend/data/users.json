@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1,
+    "name": "sakshyam",
+    "type": "farmer",
+    "credits": 0,
+    "friends": []
+  },
+  {
+    "id": 2,
+    "name": "ankit",
+    "type": "seller",
+    "credits": 0,
+    "friends": []
+  }
+]

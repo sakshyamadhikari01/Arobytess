@@ -91,6 +91,7 @@
         </div>
     </footer>
 
+<script src="auth.js"></script>
 <script>
 var navToggle = document.getElementById('navToggle');
 var navMenu = document.getElementById('navMenu');
@@ -131,11 +132,15 @@ var getStartedBtn = document.getElementById('getStartedBtn');
 var fullpageMenu = document.getElementById('fullpageMenu');
 var fullpageClose = document.getElementById('fullpageClose');
 
-getStartedBtn.addEventListener('click', function(e) {
-    e.preventDefault();
-    fullpageMenu.classList.add('active');
-    document.body.style.overflow = 'hidden';
-});
+// Only set fullpage menu behavior if user is not logged in
+var currentUser = JSON.parse(localStorage.getItem('currentUser'));
+if (!currentUser) {
+    getStartedBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        fullpageMenu.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    });
+}
 
 fullpageClose.addEventListener('click', function() {
     fullpageMenu.classList.remove('active');

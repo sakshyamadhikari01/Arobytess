@@ -13,12 +13,13 @@
     <nav class="navbar">
         <div class="nav-container">
             <a href="home.html" class="logo"><img src="images/groot.png" alt="Gaun Roots Logo" class="logo-img">Gaun Roots</a>
-            <ul class="nav-menu">
+            <ul class="nav-menu" id="navMenu">
                 <li><a href="home.html" class="nav-link">Home</a></li>
                 <li><a href="#" class="nav-link">AI Detection</a></li>
                 <li><a href="fertilizers.html" class="nav-link">Find Fertilizers</a></li>
                 <li><a href="blogs.html" class="nav-link">Agro Blogs</a></li>
                 <li><a href="profile.html" class="nav-link active">Profile</a></li>
+                <li><a href="login.html" class="nav-link">Login</a></li>
             </ul>
         </div>
     </nav>
@@ -78,33 +79,51 @@
         <div class="modal-overlay" id="modalOverlay"></div>
     </div>
 
+    <script src="api.js"></script>
+    <script src="auth.js"></script>
     <script>
         // Check if user is logged in
-        var currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        var currentUser = getCurrentUser();
+        var isLoggedIn = !!currentUser;
         
-        if (!currentUser) {
-            window.location.href = 'login.html';
+        if (currentUser && currentUser.type === 'seller') {
+            window.location.href = 'seller-profile.html';
+        } else if (currentUser) {
+            loadUserProfile();
         } else {
-            // Load user data
+            // Show guest state
+            document.getElementById('profileName').textContent = 'Guest User';
+            document.getElementById('avatarInitial').textContent = '?';
+            document.getElementById('userBadge').textContent = 'Not Logged In';
+            document.getElementById('logoutBtn').textContent = 'Login';
+        }
+
+        async function loadUserProfile() {
+            try {
+                // Fetch latest user data from API
+                var user = await api.getUser(currentUser.id);
+                currentUser = user;
+                setCurrentUser(user);
+            } catch (err) {
+                console.log('Using cached user data');
+            }
+            
             document.getElementById('profileName').textContent = currentUser.name;
             document.getElementById('avatarInitial').textContent = currentUser.name.charAt(0).toUpperCase();
             document.getElementById('userBadge').textContent = currentUser.type === 'vet' ? 'Veterinarian' : 'Farmer';
             document.getElementById('userBadge').className = 'user-badge ' + currentUser.type;
 
-            // Load credits and friends
             var credits = currentUser.credits || 0;
             var friends = currentUser.friends || [];
             
             document.getElementById('creditsCount').textContent = credits;
             document.getElementById('friendsCount').textContent = friends.length;
-
-            // Render friends list
             renderFriends(friends);
         }
 
         function renderFriends(friends) {
             var friendsList = document.getElementById('friendsList');
-            if (friends.length === 0) {
+            if (!friends || friends.length === 0) {
                 friendsList.innerHTML = '<p class="empty-message">No friends added yet</p>';
             } else {
                 friendsList.innerHTML = friends.map(function(friend) {
@@ -113,36 +132,10 @@
             }
         }
 
-        function updateUserData() {
-            localStorage.setItem('currentUser', JSON.stringify(currentUser));
-            // Also update in users array
-            var users = JSON.parse(localStorage.getItem('gaunRootsUsers') || '[]');
-            var index = users.findIndex(function(u) { return u.id === currentUser.id; });
-            if (index !== -1) {
-                users[index] = currentUser;
-                localStorage.setItem('gaunRootsUsers', JSON.stringify(users));
-            }
-        }
-
-        // Add Credits
-        document.getElementById('addCreditsBtn').addEventListener('click', function() {
-            var amount = prompt('How many credits to add?', '10');
-            if (amount && !isNaN(amount) && parseInt(amount) > 0) {
-                currentUser.credits = (currentUser.credits || 0) + parseInt(amount);
-                document.getElementById('creditsCount').textContent = currentUser.credits;
-                updateUserData();
-            }
-        });
-
-        // Add Friend Modal
+        // Modal elements
         var addFriendModal = document.getElementById('addFriendModal');
         var modalOverlay = document.getElementById('modalOverlay');
         var friendModalClose = document.getElementById('friendModalClose');
-
-        document.getElementById('addFriendBtn').addEventListener('click', function() {
-            addFriendModal.classList.add('active');
-            modalOverlay.classList.add('active');
-        });
 
         function closeModal() {
             addFriendModal.classList.remove('active');
@@ -152,28 +145,62 @@
         friendModalClose.addEventListener('click', closeModal);
         modalOverlay.addEventListener('click', closeModal);
 
-        // Add Friend Form
-        document.getElementById('addFriendForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            var friendName = document.getElementById('friendName').value.trim();
-            if (friendName) {
-                if (!currentUser.friends) currentUser.friends = [];
-                if (!currentUser.friends.includes(friendName)) {
-                    currentUser.friends.push(friendName);
-                    document.getElementById('friendsCount').textContent = currentUser.friends.length;
-                    renderFriends(currentUser.friends);
-                    updateUserData();
-                    document.getElementById('friendName').value = '';
-                    closeModal();
-                } else {
-                    alert('Friend already added!');
+        // Add Credits
+        document.getElementById('addCreditsBtn').addEventListener('click', async function() {
+            if (!isLoggedIn) {
+                alert('Please login first!');
+                window.location.href = 'login.html';
+                return;
+            }
+            var amount = prompt('How many credits to add?', '10');
+            if (amount && !isNaN(amount) && parseInt(amount) > 0) {
+                try {
+                    var user = await api.addCredits(currentUser.id, parseInt(amount));
+                    currentUser = user;
+                    setCurrentUser(user);
+                    document.getElementById('creditsCount').textContent = user.credits;
+                } catch (err) {
+                    alert('Failed to add credits');
                 }
             }
         });
 
-        // Logout
+        // Add Friend Button
+        document.getElementById('addFriendBtn').addEventListener('click', function() {
+            if (!isLoggedIn) {
+                alert('Please login first!');
+                window.location.href = 'login.html';
+                return;
+            }
+            addFriendModal.classList.add('active');
+            modalOverlay.classList.add('active');
+        });
+
+        // Add Friend Form
+        document.getElementById('addFriendForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            if (!isLoggedIn || !currentUser) return;
+            var friendName = document.getElementById('friendName').value.trim();
+            if (friendName) {
+                try {
+                    var user = await api.addFriend(currentUser.id, friendName);
+                    currentUser = user;
+                    setCurrentUser(user);
+                    document.getElementById('friendsCount').textContent = user.friends.length;
+                    renderFriends(user.friends);
+                    document.getElementById('friendName').value = '';
+                    closeModal();
+                } catch (err) {
+                    alert('Failed to add friend');
+                }
+            }
+        });
+
+        // Logout or Login
         document.getElementById('logoutBtn').addEventListener('click', function() {
-            localStorage.removeItem('currentUser');
+            if (isLoggedIn) {
+                clearCurrentUser();
+            }
             window.location.href = 'login.html';
         });
     </script>

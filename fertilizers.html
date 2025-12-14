@@ -118,6 +118,90 @@
             margin-top: 10px;
         }
 
+        /* Promotions Section */
+        .promotions-section {
+            margin-bottom: 40px;
+            padding: 25px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            border: 2px dashed var(--secondary);
+        }
+
+        .promotions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .promo-card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            transition: transform 0.3s;
+        }
+
+        .promo-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .promo-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .promo-card h3 {
+            color: var(--primary-dark);
+            font-size: 1.1rem;
+            margin: 0;
+        }
+
+        .promo-type {
+            background: var(--accent);
+            color: var(--primary-dark);
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .promo-card .promo-desc {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+        }
+
+        .promo-card .promo-price {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 8px;
+        }
+
+        .promo-card .promo-seller {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-bottom: 5px;
+        }
+
+        .promo-card .promo-contact {
+            display: inline-block;
+            background: var(--primary-dark);
+            color: var(--white);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            text-decoration: none;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+
+        .promo-card .promo-contact:hover {
+            background: var(--primary);
+        }
+
         .section-title {
             text-align: left;
             margin-bottom: 5px;
@@ -204,11 +288,12 @@
             <button class="slider-close" id="sliderClose">X</button>
         </div>
         <ul class="slider-nav">
+            <li><a href="home.html">Home</a></li>
             <li><a href="#">AI Detection</a></li>
             <li><a href="fertilizers.html">Find Fertilizers</a></li>
             <li><a href="blogs.html">Agro Blogs</a></li>
-            <li><a href="#">Community</a></li>
-            <li><a href="#">Profile</a></li>
+            <li><a href="profile.html">Profile</a></li>
+            <li><a href="login.html">Login</a></li>
         </ul>
     </div>
     <div class="slider-overlay" id="sliderOverlay"></div>
@@ -224,8 +309,8 @@
                 <li><a href="#" class="nav-link">AI Detection</a></li>
                 <li><a href="fertilizers.html" class="nav-link active">Find Fertilizers</a></li>
                 <li><a href="blogs.html" class="nav-link">Agro Blogs</a></li>
-                <li><a href="#" class="nav-link">Community</a></li>
-                <li><a href="#" class="nav-link">Profile</a></li>
+                <li><a href="profile.html" class="nav-link">Profile</a></li>
+                <li><a href="login.html" class="nav-link">Login</a></li>
             </ul>
         </div>
     </nav>
@@ -241,6 +326,13 @@
         </div>
 
         <div class="stores-section">
+            <!-- Seller Promotions Section -->
+            <div class="promotions-section" id="promotionsSection" style="display: none;">
+                <h2 class="section-title">🌟 Featured Fertilizers from Sellers</h2>
+                <p style="color: rgba(255,255,255,0.8); margin-bottom: 15px;">Products promoted by verified sellers</p>
+                <div class="promotions-grid" id="promotionsGrid"></div>
+            </div>
+
             <div id="map"></div>
             <h2 class="section-title">Fertilizer Stores in Bharatpur-11</h2>
             <p style="color: var(--text-light); margin-bottom: 15px;">Click on a store to view on map</p>
@@ -272,6 +364,7 @@
     </footer>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="auth.js"></script>
     <script>
     var storeData = [
         {
@@ -386,6 +479,43 @@
             navbar.classList.remove('scrolled');
         }
     };
+
+    // Load seller promotions from API
+    async function loadPromotions() {
+        var promotionsSection = document.getElementById('promotionsSection');
+        var promotionsGrid = document.getElementById('promotionsGrid');
+
+        try {
+            var response = await fetch('http://localhost:8000/api/products');
+            var products = await response.json();
+
+            if (products.length > 0) {
+                promotionsSection.style.display = 'block';
+                promotionsGrid.innerHTML = products.map(function(product) {
+                    // Increment view count in background
+                    fetch('http://localhost:8000/api/products/' + product.id + '/view', { method: 'POST' });
+                    
+                    return '<div class="promo-card">' +
+                        '<div class="promo-header">' +
+                            '<h3>' + product.name + '</h3>' +
+                            '<span class="promo-type">' + product.type + '</span>' +
+                        '</div>' +
+                        '<p class="promo-desc">' + product.description + '</p>' +
+                        '<div class="promo-price">Rs. ' + product.price + '</div>' +
+                        '<div class="promo-seller">Sold by: ' + product.seller_name + '</div>' +
+                        '<a href="tel:' + product.phone + '" class="promo-contact">📞 ' + product.phone + '</a>' +
+                    '</div>';
+                }).join('');
+            } else {
+                promotionsSection.style.display = 'none';
+            }
+        } catch (err) {
+            console.log('API not available, promotions hidden');
+            promotionsSection.style.display = 'none';
+        }
+    }
+
+    loadPromotions();
     </script>
 </body>
 </html>

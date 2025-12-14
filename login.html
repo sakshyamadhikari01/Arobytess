@@ -21,6 +21,7 @@
             <div class="user-type-tabs">
                 <button class="tab-btn active" data-type="farmer">Farmer</button>
                 <button class="tab-btn" data-type="vet">Vet</button>
+                <button class="tab-btn" data-type="seller">Seller</button>
             </div>
 
             <form id="loginForm" class="login-form">
@@ -50,6 +51,7 @@
                 <div class="user-type-tabs">
                     <button class="tab-btn active" data-type="farmer" id="regFarmerTab">Farmer</button>
                     <button class="tab-btn" data-type="vet" id="regVetTab">Vet</button>
+                    <button class="tab-btn" data-type="seller" id="regSellerTab">Seller</button>
                 </div>
 
                 <form id="registerForm" class="login-form">
@@ -67,7 +69,18 @@
         <div class="modal-overlay" id="modalOverlay"></div>
     </div>
 
+    <script src="api.js"></script>
     <script>
+        // Redirect if already logged in
+        var currentUser = getCurrentUser();
+        if (currentUser) {
+            if (currentUser.type === 'seller') {
+                window.location.href = 'seller-profile.html';
+            } else {
+                window.location.href = 'profile.html';
+            }
+        }
+
         // Tab switching for login
         var loginTabs = document.querySelectorAll('.login-card .tab-btn');
         var userTypeInput = document.getElementById('userType');
@@ -83,18 +96,28 @@
         // Tab switching for registration
         var regFarmerTab = document.getElementById('regFarmerTab');
         var regVetTab = document.getElementById('regVetTab');
+        var regSellerTab = document.getElementById('regSellerTab');
         var regUserTypeInput = document.getElementById('regUserType');
 
         regFarmerTab.addEventListener('click', function() {
             regFarmerTab.classList.add('active');
             regVetTab.classList.remove('active');
+            regSellerTab.classList.remove('active');
             regUserTypeInput.value = 'farmer';
         });
 
         regVetTab.addEventListener('click', function() {
             regVetTab.classList.add('active');
             regFarmerTab.classList.remove('active');
+            regSellerTab.classList.remove('active');
             regUserTypeInput.value = 'vet';
+        });
+
+        regSellerTab.addEventListener('click', function() {
+            regSellerTab.classList.add('active');
+            regFarmerTab.classList.remove('active');
+            regVetTab.classList.remove('active');
+            regUserTypeInput.value = 'seller';
         });
 
         // Modal handling
@@ -118,49 +141,37 @@
         modalOverlay.addEventListener('click', closeModal);
 
         // Login form submission
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             var name = document.getElementById('userName').value.trim();
             var type = document.getElementById('userType').value;
 
             if (name) {
-                // Store user info in localStorage
-                var users = JSON.parse(localStorage.getItem('gaunRootsUsers') || '[]');
-                var existingUser = users.find(function(u) { 
-                    return u.name.toLowerCase() === name.toLowerCase() && u.type === type; 
-                });
-
-                if (existingUser) {
-                    localStorage.setItem('currentUser', JSON.stringify(existingUser));
+                try {
+                    var user = await api.login(name, type);
+                    setCurrentUser(user);
                     alert('Welcome back, ' + name + '!');
                     window.location.href = 'home.html';
-                } else {
-                    alert('User not found. Please register first.');
+                } catch (err) {
+                    alert(err.message || 'User not found. Please register first.');
                 }
             }
         });
 
         // Registration form submission
-        document.getElementById('registerForm').addEventListener('submit', function(e) {
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             var name = document.getElementById('regName').value.trim();
             var type = document.getElementById('regUserType').value;
 
             if (name) {
-                var users = JSON.parse(localStorage.getItem('gaunRootsUsers') || '[]');
-                var existingUser = users.find(function(u) { 
-                    return u.name.toLowerCase() === name.toLowerCase() && u.type === type; 
-                });
-
-                if (existingUser) {
-                    alert('User already exists. Please login instead.');
-                } else {
-                    var newUser = { name: name, type: type, id: Date.now() };
-                    users.push(newUser);
-                    localStorage.setItem('gaunRootsUsers', JSON.stringify(users));
-                    localStorage.setItem('currentUser', JSON.stringify(newUser));
+                try {
+                    var user = await api.register(name, type);
+                    setCurrentUser(user);
                     alert('Registration successful! Welcome, ' + name + '!');
                     window.location.href = 'home.html';
+                } catch (err) {
+                    alert(err.message || 'Registration failed.');
                 }
             }
         });

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seller Dashboard - Gaun Roots</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="seller-profile.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Amarna:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="home.html" class="logo"><img src="images/groot.png" alt="Gaun Roots Logo" class="logo-img">Gaun Roots</a>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="home.html" class="nav-link">Home</a></li>
+                <li><a href="fertilizers.html" class="nav-link">Find Fertilizers</a></li>
+                <li><a href="blogs.html" class="nav-link">Agro Blogs</a></li>
+                <li><a href="seller-profile.html" class="nav-link active">Profile</a></li>
+                <li><a href="login.html" class="nav-link">Login</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="seller-container">
+        <div class="seller-sidebar">
+            <div class="seller-info">
+                <div class="seller-avatar" id="sellerAvatar">
+                    <span id="avatarInitial">S</span>
+                </div>
+                <h2 id="sellerName">Seller Name</h2>
+                <span class="seller-badge">Verified Seller</span>
+            </div>
+            <div class="seller-stats">
+                <div class="stat-item">
+                    <span class="stat-num" id="productCount">0</span>
+                    <span class="stat-text">Products</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-num" id="viewCount">0</span>
+                    <span class="stat-text">Views</span>
+                </div>
+            </div>
+            <button class="btn btn-logout" id="logoutBtn">Logout</button>
+        </div>
+
+        <div class="seller-main">
+            <div class="section-header">
+                <h1>My Fertilizer Products</h1>
+                <button class="btn btn-primary" id="addProductBtn">+ Add Product</button>
+            </div>
+
+            <div class="products-grid" id="productsGrid">
+                <div class="empty-state" id="emptyState">
+                    <p>No products added yet. Start promoting your fertilizers!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Product Modal -->
+        <div class="modal" id="addProductModal">
+            <div class="modal-content">
+                <button class="modal-close" id="modalClose">✕</button>
+                <h2>Add New Product</h2>
+                <form id="addProductForm">
+                    <div class="form-group">
+                        <label for="productName">Product Name</label>
+                        <input type="text" id="productName" placeholder="e.g., Organic NPK Fertilizer" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productPrice">Price (Rs.)</label>
+                        <input type="number" id="productPrice" placeholder="e.g., 500" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productDesc">Description</label>
+                        <textarea id="productDesc" rows="3" placeholder="Describe your product..." required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="productType">Type</label>
+                        <select id="productType" required>
+                            <option value="">Select type</option>
+                            <option value="Organic">Organic</option>
+                            <option value="Chemical">Chemical</option>
+                            <option value="Bio-fertilizer">Bio-fertilizer</option>
+                            <option value="Compost">Compost</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="contactPhone">Contact Phone</label>
+                        <input type="tel" id="contactPhone" placeholder="e.g., 9800000000" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Product</button>
+                </form>
+            </div>
+        </div>
+        <div class="modal-overlay" id="modalOverlay"></div>
+    </div>
+
+    <script src="api.js"></script>
+    <script src="auth.js"></script>
+    <script>
+        // Check if seller is logged in
+        var currentUser = getCurrentUser();
+        
+        if (!currentUser || currentUser.type !== 'seller') {
+            alert('Please login as a seller to access this page.');
+            window.location.href = 'login.html';
+        } else {
+            document.getElementById('sellerName').textContent = currentUser.name;
+            document.getElementById('avatarInitial').textContent = currentUser.name.charAt(0).toUpperCase();
+            loadProducts();
+        }
+
+        async function loadProducts() {
+            try {
+                var myProducts = await api.getSellerProducts(currentUser.id);
+                
+                document.getElementById('productCount').textContent = myProducts.length;
+                
+                var totalViews = myProducts.reduce(function(sum, p) { return sum + (p.views || 0); }, 0);
+                document.getElementById('viewCount').textContent = totalViews;
+
+                var grid = document.getElementById('productsGrid');
+
+                if (myProducts.length === 0) {
+                    grid.innerHTML = '<div class="empty-state"><p>No products added yet. Start promoting your fertilizers!</p></div>';
+                } else {
+                    grid.innerHTML = myProducts.map(function(product) {
+                        return '<div class="product-card">' +
+                            '<div class="product-header">' +
+                                '<h3>' + product.name + '</h3>' +
+                                '<span class="product-type">' + product.type + '</span>' +
+                            '</div>' +
+                            '<p class="product-desc">' + product.description + '</p>' +
+                            '<div class="product-footer">' +
+                                '<span class="product-price">Rs. ' + product.price + '</span>' +
+                                '<span class="product-views">' + (product.views || 0) + ' views</span>' +
+                            '</div>' +
+                            '<button class="btn-delete" onclick="deleteProduct(' + product.id + ')">Delete</button>' +
+                        '</div>';
+                    }).join('');
+                }
+            } catch (err) {
+                console.error('Failed to load products:', err);
+            }
+        }
+
+        async function deleteProduct(productId) {
+            if (confirm('Are you sure you want to delete this product?')) {
+                try {
+                    await api.deleteProduct(productId);
+                    loadProducts();
+                } catch (err) {
+                    alert('Failed to delete product');
+                }
+            }
+        }
+
+        // Modal handling
+        var addProductModal = document.getElementById('addProductModal');
+        var modalOverlay = document.getElementById('modalOverlay');
+        var modalClose = document.getElementById('modalClose');
+        var addProductBtn = document.getElementById('addProductBtn');
+
+        addProductBtn.addEventListener('click', function() {
+            addProductModal.classList.add('active');
+            modalOverlay.classList.add('active');
+        });
+
+        function closeModal() {
+            addProductModal.classList.remove('active');
+            modalOverlay.classList.remove('active');
+        }
+
+        modalClose.addEventListener('click', closeModal);
+        modalOverlay.addEventListener('click', closeModal);
+
+        // Add Product Form
+        document.getElementById('addProductForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            var product = {
+                name: document.getElementById('productName').value.trim(),
+                price: parseFloat(document.getElementById('productPrice').value),
+                description: document.getElementById('productDesc').value.trim(),
+                type: document.getElementById('productType').value,
+                phone: document.getElementById('contactPhone').value.trim()
+            };
+
+            try {
+                await api.createProduct(product, currentUser.id, currentUser.name);
+                this.reset();
+                closeModal();
+                loadProducts();
+                alert('Product added successfully!');
+            } catch (err) {
+                alert('Failed to add product');
+            }
+        });
+
+        // Logout
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            clearCurrentUser();
+            window.location.href = 'login.html';
+        });
+    </script>
+</body>
+</html>
