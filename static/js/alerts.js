@@ -49,7 +49,7 @@ var AlertSystem = (function() {
                 cropType: reportData.cropType,
                 severity: reportData.severity,
                 description: reportData.description,
-                reporterPhone: reportData.reporterPhone
+                location: 'Bharatpur'
             };
             
             var response = await fetch(apiEndpoint + '/report-disease', {
@@ -61,7 +61,7 @@ var AlertSystem = (function() {
             var result = await response.json();
             
             if (result.success) {
-                var msg = 'Report submitted! ' + result.notified_farmers + ' farmers have been notified.';
+                var msg = 'Disease report submitted! All farmers in the community have been alerted about this outbreak.';
                 displayNotification(msg, 'success');
                 return result;
             } else {
@@ -97,16 +97,16 @@ var AlertSystem = (function() {
         var container = document.querySelector('.recent-alerts');
         if (!container) return;
 
-        var html = '<h3 style="color: var(--white); margin-bottom: 20px;">Recent Alerts in Your Area</h3>';
+        var html = '<h3 style="color: var(--white); margin-bottom: 20px;">What\'s been reported lately</h3>';
         
         if (alerts.length === 0) {
-            html += '<p style="color: rgba(255,255,255,0.7);">No recent alerts in your area.</p>';
+            html += '<p style="color: rgba(255,255,255,0.7);">No recent reports in the community.</p>';
         } else {
             alerts.forEach(function(alert) {
                 html += '<div class="alert-item">' +
                     '<div class="alert-info">' +
-                        '<h4>' + alert.diseaseName + ' in ' + alert.cropType + '</h4>' +
-                        '<p>Detected in ' + alert.location + ' - ' + (alert.description || 'Take preventive measures') + '</p>' +
+                        '<h4>' + alert.diseaseName + ' on ' + alert.cropType + '</h4>' +
+                        '<p>Bharatpur - ' + (alert.description || 'Take preventive measures') + '</p>' +
                     '</div>' +
                     '<div class="alert-time">' + formatTimeAgo(alert.reportedAt) + '</div>' +
                 '</div>';
@@ -155,13 +155,16 @@ var AlertSystem = (function() {
                     diseaseName: document.getElementById('diseaseName').value,
                     cropType: document.getElementById('reportCropType').value,
                     severity: document.getElementById('severity').value,
-                    description: document.getElementById('description').value,
-                    reporterPhone: document.getElementById('reporterPhone').value
+                    description: document.getElementById('description').value
                 };
 
                 try {
                     await submitDiseaseReport(data);
                     reportForm.reset();
+                    // Close modal after successful submission
+                    if (typeof closeReportModal === 'function') {
+                        closeReportModal();
+                    }
                 } catch (err) {
                     // Error handled in submitDiseaseReport
                 }

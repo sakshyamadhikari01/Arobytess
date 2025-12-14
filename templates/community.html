@@ -286,68 +286,18 @@
             <img src="/static/images/grey.png" alt="" class="header-flower header-flower-right">
             <div class="page-header-content">
                 <h1>Disease Alert System</h1>
-                <p>Get SMS alerts when diseases pop up near you</p>
-                <small style="color: var(--secondary); font-weight: 500;">Auto-location enabled for quick demo</small>
+                <p>Community disease reporting and alerts for farmers</p>
+                <small style="color: var(--secondary); font-weight: 500;">Demo mode - All farmers get alerts when diseases are reported</small>
             </div>
         </div>
 
         <div class="alert-section">
-            <!-- Registration section -->
-            <h2 class="section-title">Sign Up for Alerts</h2>
-            <p style="color: rgba(255,255,255,0.8); margin-bottom: 15px;">We'll text you when something's spreading in your area</p>
+            <!-- Demo info section -->
+            <h2 class="section-title">Community Disease Alerts</h2>
+            <p style="color: rgba(255,255,255,0.8); margin-bottom: 15px;">Report diseases and help protect the farming community</p>
             
             <div style="background: rgba(255,193,7,0.1); border: 1px solid rgba(255,193,7,0.3); border-radius: 8px; padding: 12px; margin-bottom: 20px;">
-                <p style="color: var(--secondary); margin: 0; font-size: 0.9rem;"><strong>Demo Mode:</strong> Location is auto-detected as "Kathmandu Valley" for hackathon demonstration</p>
-            </div>
-
-            <!-- Registration form -->
-            <div class="alert-form-container">
-                <form id="alertRegistrationForm">
-                    <div class="form-group">
-                        <label for="farmerName">Full Name</label>
-                        <input type="text" id="farmerName" name="farmerName" placeholder="Enter your full name" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="phoneNumber">Phone Number (SMS)</label>
-                        <input type="tel" id="phoneNumber" name="phoneNumber" placeholder="+977-9800000000" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="autoLocation">Location (Auto-detected)</label>
-                        <input type="text" id="autoLocation" name="autoLocation" value="Kathmandu Valley" readonly style="background: rgba(255,255,255,0.05); cursor: not-allowed;">
-                        <small style="color: rgba(255,255,255,0.7); font-size: 0.8rem; margin-top: 5px; display: block;">Location is automatically detected for demo purposes</small>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="cropTypes">Primary Crops</label>
-                        <select id="cropTypes" name="cropTypes" required>
-                            <option value="">Select your primary crop</option>
-                            <option value="rice">Rice</option>
-                            <option value="wheat">Wheat</option>
-                            <option value="maize">Maize</option>
-                            <option value="potato">Potato</option>
-                            <option value="tomato">Tomato</option>
-                            <option value="vegetables">Mixed Vegetables</option>
-                            <option value="fruits">Fruits</option>
-                            <option value="other">Other</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="alertRadius">Alert Radius (km)</label>
-                        <select id="alertRadius" name="alertRadius" required>
-                            <option value="5">5 km</option>
-                            <option value="10" selected>10 km</option>
-                            <option value="20">20 km</option>
-                            <option value="50">50 km</option>
-                        </select>
-                    </div>
-                    
-                    <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">
-                        Register for Alerts
-                    </button>
-                </form>
+                <p style="color: var(--secondary); margin: 0; font-size: 0.9rem;"><strong>Demo Mode:</strong> Location set to "Bharatpur" - All farmers receive alerts when diseases are reported</p>
             </div>
 
             <!-- Features section -->
@@ -355,8 +305,8 @@
             <div class="alert-grid">
                 <div class="alert-card">
                     <span class="alert-status status-active">Active</span>
-                    <h3>Quick SMS Alerts</h3>
-                    <p>We'll send you a text as soon as we hear about diseases nearby. No app needed.</p>
+                    <h3>Instant Community Alerts</h3>
+                    <p>All farmers in the community get notified immediately when diseases are reported. No registration needed.</p>
                 </div>
 
                 <div class="alert-card">
@@ -399,21 +349,21 @@
                 <div class="alert-item">
                     <div class="alert-info">
                         <h4>Late Blight on Potatoes</h4>
-                        <p>Kathmandu Valley - might want to spray fungicide soon</p>
+                        <p>Bharatpur - might want to spray fungicide soon</p>
                     </div>
                     <div class="alert-time">2 hours ago</div>
                 </div>
                 <div class="alert-item">
                     <div class="alert-info">
                         <h4>Tomato Wilt</h4>
-                        <p>Kathmandu Valley - check your drainage, don't overwater</p>
+                        <p>Bharatpur - check your drainage, don't overwater</p>
                     </div>
                     <div class="alert-time">1 day ago</div>
                 </div>
                 <div class="alert-item">
                     <div class="alert-info">
                         <h4>Rice Blast</h4>
-                        <p>Kathmandu Valley - spreading fast, treat asap</p>
+                        <p>Bharatpur - spreading fast, treat asap</p>
                     </div>
                     <div class="alert-time">3 days ago</div>
                 </div>
@@ -436,8 +386,8 @@
                 
                 <div class="form-group">
                     <label for="autoReportLocation">Location (Auto-detected)</label>
-                    <input type="text" id="autoReportLocation" name="autoReportLocation" value="Kathmandu Valley" readonly style="background: rgba(255,255,255,0.05); cursor: not-allowed;">
-                    <small style="color: rgba(255,255,255,0.7); font-size: 0.8rem; margin-top: 5px; display: block;">Location is automatically detected for demo purposes</small>
+                    <input type="text" id="autoReportLocation" name="autoReportLocation" value="Bharatpur" readonly style="background: rgba(255,255,255,0.05); cursor: not-allowed;">
+                    <small style="color: rgba(255,255,255,0.7); font-size: 0.8rem; margin-top: 5px; display: block;">Location is automatically set for demo purposes</small>
                 </div>
                 
                 <div class="form-group">
@@ -470,13 +420,8 @@
                     <textarea id="description" name="description" placeholder="Additional details about symptoms, spread, etc." rows="3"></textarea>
                 </div>
                 
-                <div class="form-group">
-                    <label for="reporterPhone">Your Phone Number</label>
-                    <input type="tel" id="reporterPhone" name="reporterPhone" placeholder="+977-9800000000" required>
-                </div>
-                
                 <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">
-                    Submit Report & Alert Farmers
+                    Submit Report & Alert All Farmers
                 </button>
             </form>
         </div>
@@ -547,54 +492,9 @@
         }
     });
 
-    // Registration form handler
-    document.getElementById('alertRegistrationForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        var formData = {
-            farmerName: document.getElementById('farmerName').value,
-            phoneNumber: document.getElementById('phoneNumber').value,
-            cropTypes: document.getElementById('cropTypes').value,
-            alertRadius: document.getElementById('alertRadius').value
-        };
-
-        // Validate phone
-        var phonePattern = /^\+?[0-9]{10,15}$/;
-        if (!phonePattern.test(formData.phoneNumber.replace(/[-\s]/g, ''))) {
-            alert('Please enter a valid phone number');
-            return;
-        }
-
-        // Submit to API
-        fetch('/api/register-alerts', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(formData)
-        })
-        .then(function(response) { return response.json(); })
-        .then(function(data) {
-            if (data.success) {
-                alert('Successfully registered for disease alerts! Location auto-detected as Kathmandu Valley. You will receive SMS notifications when diseases are detected in your area.');
-                document.getElementById('alertRegistrationForm').reset();
-                document.getElementById('autoLocation').value = 'Kathmandu Valley';
-            } else {
-                alert('Registration failed: ' + (data.message || 'Please try again'));
-            }
-        })
-        .catch(function(error) {
-            console.error('Error:', error);
-            alert('Registration failed. Please check your connection and try again.');
-        });
-    });
-
-    // Load user preferences on page load
+    // Load demo location on page load
     window.addEventListener('load', function() {
-        var user = JSON.parse(localStorage.getItem('user') || '{}');
-        if (user.phone) {
-            document.getElementById('phoneNumber').value = user.phone;
-        }
-        document.getElementById('autoLocation').value = 'Kathmandu Valley';
-        document.getElementById('autoReportLocation').value = 'Kathmandu Valley';
+        document.getElementById('autoReportLocation').value = 'Bharatpur';
     });
 
     // Modal functions

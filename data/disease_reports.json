@@ -53,5 +53,25 @@
     "location": "Kathmandu Valley",
     "reportedAt": "2024-12-14T00:00:00Z",
     "status": "pending_verification"
+  },
+  {
+    "diseaseName": "Test Disease",
+    "cropType": "tomato",
+    "severity": "medium",
+    "description": "Test report from API",
+    "location": "Bharatpur",
+    "id": 6,
+    "reportedAt": "2024-12-14T00:00:00Z",
+    "status": "pending_verification"
+  },
+  {
+    "diseaseName": "a",
+    "cropType": "rice",
+    "severity": "low",
+    "description": "a",
+    "location": "Bharatpur",
+    "id": 7,
+    "reportedAt": "2024-12-14T00:00:00Z",
+    "status": "pending_verification"
   }
 ]
