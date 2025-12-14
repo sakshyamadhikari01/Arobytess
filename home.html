@@ -3,23 +3,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gaun Roots - Agricultural Information System</title>
+    <title>Gaun Roots - Empowering Rural Agriculture</title>
     <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
 </head>
 <body>
-    <header class="main-header">
-        <h1>Gaun Roots</h1>
-        <p class="subtitle">Agricultural Information System for Nepal</p>
-    </header>
-            <a href="vegetation.html" class="nav-card vegetation-card">
-                <h2>Vegetation</h2>
-                <p>Fertilizers, crop diseases, and plantation calendar</p>
-            </a>
-        </div>
-    </main>
 
-    <footer>
-        <p>&copy; 2025 Gaun Roots - Supporting Nepalese Agriculture</p>
+    <!-- Slider Menu -->
+    <div class="slider-menu" id="sliderMenu">
+        <div class="slider-header">
+            <span class="slider-title">Menu</span>
+            <button class="slider-close" id="sliderClose">
+                X
+            </button>
+        </div>
+        <ul class="slider-nav">
+            <li><a href="#">AI Detection</a></li>
+            <li><a href="#">Find Fertilizers</a></li>
+            <li><a href="#">Agro Blogs</a></li>
+            <li><a href="#">Community</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Profile</a></li>
+        </ul>
+    </div>
+    <div class="slider-overlay" id="sliderOverlay"></div>
+
+    <!-- Menu Toggle Button (3 lines) -->
+    <button class="menu-toggle" id="menuToggle">
+        ☰
+    </button>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">
+                Gaun Roots
+            </a>
+            <button class="nav-toggle" id="navToggle">
+                ☰
+            </button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="#home" class="nav-link active">Home</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section id="home" class="hero">
+        <img src="images/flower1.png" alt="" class="hero-flower hero-flower-left">
+        <img src="images/flower1.png" alt="" class="hero-flower hero-flower-right">
+        <div class="hero-content">
+            <h1>Welcome to Gaun Roots</h1>
+            <p class="hero-tagline">Empowering Rural Agriculture, One Village at a Time</p>
+            <p class="hero-subtitle">Connecting farmers with modern tools, knowledge, and resources to grow sustainably</p>
+            <div class="hero-buttons">
+                <a href="#" class="btn btn-primary">Get Started</a>
+                <a href="#" class="btn btn-outline">Learn More</a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3>Gaun Roots</h3>
+                    <p>Empowering rural agriculture through technology and community</p>
+                </div>
+                <div class="footer-social">
+                    <h4>Follow Us</h4>
+                    <div class="social-icons">
+                        <a href="https://www.facebook.com/ankit_gaire7?utm_source">FB</a>
+                        <a href="https://x.com/Twffyy">X</a>
+                        <a href="https://www.instagram.com/ankit_gaire7?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==">IG</a>
+                        <a href="https://www.youtube.com/@heartlyplayz794">YT</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>Ky.</p>
+            </div>
+        </div>
     </footer>
+
+    <script>
+        const navToggle = document.getElementById('navToggle');
+        const navMenu = document.getElementById('navMenu');
+        
+        navToggle.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+        });
+
+        window.addEventListener('scroll', () => {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+    
+        const menuToggle = document.getElementById('menuToggle');
+        const sliderMenu = document.getElementById('sliderMenu');
+        const sliderClose = document.getElementById('sliderClose');
+        const sliderOverlay = document.getElementById('sliderOverlay');
+
+        menuToggle.addEventListener('click', () => {
+            sliderMenu.classList.add('active');
+            sliderOverlay.classList.add('active');
+        });
+
+        sliderClose.addEventListener('click', () => {
+            sliderMenu.classList.remove('active');
+            sliderOverlay.classList.remove('active');
+        });
+
+        sliderOverlay.addEventListener('click', () => {
+            sliderMenu.classList.remove('active');
+            sliderOverlay.classList.remove('active');
+        });
+    </script>
+
 </body>
 </html>
