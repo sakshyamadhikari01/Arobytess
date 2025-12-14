@@ -9,7 +9,6 @@ import os
 
 app = FastAPI(title="Gaun Roots API")
 
-# CORS middleware
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -18,7 +17,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Data storage (using JSON files for simplicity)
 DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
 os.makedirs(DATA_DIR, exist_ok=True)
 
@@ -35,7 +33,6 @@ def save_data(filepath, data):
     with open(filepath, "w") as f:
         json.dump(data, f, indent=2)
 
-# Models
 class UserCreate(BaseModel):
     name: str
     type: str  # farmer, vet, seller
@@ -55,7 +52,6 @@ class ProductCreate(BaseModel):
     type: str
     phone: str
 
-# User endpoints
 @app.post("/api/users/register")
 def register_user(user: UserCreate):
     users = load_data(USERS_FILE)
@@ -134,7 +130,6 @@ def add_friend(user_id: int, friend_name: str):
     save_data(USERS_FILE, users)
     return users[user_idx]
 
-# Product endpoints
 @app.get("/api/products")
 def get_products():
     products = load_data(PRODUCTS_FILE)
@@ -181,7 +176,6 @@ def increment_view(product_id: int):
         return products[product_idx]
     raise HTTPException(status_code=404, detail="Product not found")
 
-# Serve static files
 app.mount("/", StaticFiles(directory="..", html=True), name="static")
 
 if __name__ == "__main__":

@@ -562,7 +562,6 @@ body {
 .contact-form button { align-self: flex-start; }
 
 
-/* Footer Styles */
 .footer {
     background: var(--primary-dark);
     color: var(--white);

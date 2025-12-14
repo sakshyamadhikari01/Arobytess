@@ -141,7 +141,6 @@
     font-size: 0.9rem;
 }
 
-/* Modal Styles */
 .modal {
     position: fixed;
     top: 50%;
@@ -212,7 +211,6 @@
     margin-bottom: 25px;
 }
 
-/* Responsive */
 @media (max-width: 480px) {
     .login-card,
     .modal {

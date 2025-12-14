@@ -118,7 +118,6 @@
             margin-top: 10px;
         }
 
-        /* Promotions Section */
         .promotions-section {
             margin-bottom: 40px;
             padding: 25px;
@@ -480,7 +479,6 @@
         }
     };
 
-    // Load seller promotions from API
     async function loadPromotions() {
         var promotionsSection = document.getElementById('promotionsSection');
         var promotionsGrid = document.getElementById('promotionsGrid');
@@ -492,7 +490,6 @@
             if (products.length > 0) {
                 promotionsSection.style.display = 'block';
                 promotionsGrid.innerHTML = products.map(function(product) {
-                    // Increment view count in background
                     fetch('http://localhost:8000/api/products/' + product.id + '/view', { method: 'POST' });
                     
                     return '<div class="promo-card">' +

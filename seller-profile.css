@@ -207,7 +207,6 @@
     color: var(--white);
 }
 
-/* Modal Styles */
 .modal {
     position: fixed;
     top: 50%;
@@ -302,7 +301,6 @@
     resize: vertical;
 }
 
-/* Responsive */
 @media (max-width: 900px) {
     .seller-sidebar {
         width: 100%;

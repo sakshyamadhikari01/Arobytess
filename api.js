@@ -1,8 +1,6 @@
-// API Helper for Gaun Roots
 const API_BASE = 'http://localhost:8000/api';
 
 const api = {
-    // User endpoints
     async register(name, type) {
         const res = await fetch(`${API_BASE}/users/register`, {
             method: 'POST',
@@ -51,7 +49,6 @@ const api = {
         return res.json();
     },
 
-    // Product endpoints
     async getProducts() {
         const res = await fetch(`${API_BASE}/products`);
         return res.json();
@@ -88,7 +85,6 @@ const api = {
     }
 };
 
-// Helper to get current user from localStorage
 function getCurrentUser() {
     return JSON.parse(localStorage.getItem('currentUser'));
 }

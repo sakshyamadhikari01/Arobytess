@@ -1,15 +1,12 @@
-// Auth helper - updates navigation based on login state
 function updateNavigation() {
     var currentUser = JSON.parse(localStorage.getItem('currentUser'));
     var isLoggedIn = !!currentUser;
     
-    // Get profile link URL based on user type
     var profileUrl = 'profile.html';
     if (currentUser && currentUser.type === 'seller') {
         profileUrl = 'seller-profile.html';
     }
 
-    // Update all navigation menus
     var navMenus = [
         document.getElementById('navMenu'),
         document.querySelector('.slider-nav'),
@@ -19,13 +16,11 @@ function updateNavigation() {
     navMenus.forEach(function(menu) {
         if (!menu) return;
         
-        // Find and update profile/login links
         var links = menu.querySelectorAll('a');
         links.forEach(function(link) {
             var href = link.getAttribute('href');
             var text = link.textContent.trim().toLowerCase();
             
-            // Update Profile link
             if (href === 'profile.html' || href === 'seller-profile.html' || text === 'profile') {
                 if (isLoggedIn) {
                     link.setAttribute('href', profileUrl);
@@ -36,7 +31,6 @@ function updateNavigation() {
                 }
             }
             
-            // Update Login/Logout link
             if (href === 'login.html' || text === 'login' || text === 'logout') {
                 if (isLoggedIn) {
                     link.textContent = 'Logout';
@@ -55,7 +49,6 @@ function updateNavigation() {
         });
     });
 
-    // Update Get Started button if exists
     var getStartedBtn = document.getElementById('getStartedBtn');
     if (getStartedBtn && isLoggedIn) {
         getStartedBtn.textContent = 'Go to Dashboard';
@@ -66,5 +59,4 @@ function updateNavigation() {
     }
 }
 
-// Run on page load
 document.addEventListener('DOMContentLoaded', updateNavigation);

@@ -132,7 +132,6 @@ var getStartedBtn = document.getElementById('getStartedBtn');
 var fullpageMenu = document.getElementById('fullpageMenu');
 var fullpageClose = document.getElementById('fullpageClose');
 
-// Only set fullpage menu behavior if user is not logged in
 var currentUser = JSON.parse(localStorage.getItem('currentUser'));
 if (!currentUser) {
     getStartedBtn.addEventListener('click', function(e) {
@@ -147,7 +146,6 @@ fullpageClose.addEventListener('click', function() {
     document.body.style.overflow = '';
 });
 
-// Close menus when clicking navigation links
 var fullpageLinks = document.querySelectorAll('.fullpage-nav a');
 fullpageLinks.forEach(function(link) {
     link.addEventListener('click', function() {

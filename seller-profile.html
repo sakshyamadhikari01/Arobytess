@@ -100,7 +100,6 @@
     <script src="api.js"></script>
     <script src="auth.js"></script>
     <script>
-        // Check if seller is logged in
         var currentUser = getCurrentUser();
         
         if (!currentUser || currentUser.type !== 'seller') {
@@ -157,7 +156,6 @@
             }
         }
 
-        // Modal handling
         var addProductModal = document.getElementById('addProductModal');
         var modalOverlay = document.getElementById('modalOverlay');
         var modalClose = document.getElementById('modalClose');
@@ -176,7 +174,6 @@
         modalClose.addEventListener('click', closeModal);
         modalOverlay.addEventListener('click', closeModal);
 
-        // Add Product Form
         document.getElementById('addProductForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
@@ -199,7 +196,6 @@
             }
         });
 
-        // Logout
         document.getElementById('logoutBtn').addEventListener('click', function() {
             clearCurrentUser();
             window.location.href = 'login.html';

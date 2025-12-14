@@ -82,7 +82,6 @@
     <script src="api.js"></script>
     <script src="auth.js"></script>
     <script>
-        // Check if user is logged in
         var currentUser = getCurrentUser();
         var isLoggedIn = !!currentUser;
         
@@ -91,7 +90,6 @@
         } else if (currentUser) {
             loadUserProfile();
         } else {
-            // Show guest state
             document.getElementById('profileName').textContent = 'Guest User';
             document.getElementById('avatarInitial').textContent = '?';
             document.getElementById('userBadge').textContent = 'Not Logged In';
@@ -100,7 +98,6 @@
 
         async function loadUserProfile() {
             try {
-                // Fetch latest user data from API
                 var user = await api.getUser(currentUser.id);
                 currentUser = user;
                 setCurrentUser(user);
@@ -132,7 +129,6 @@
             }
         }
 
-        // Modal elements
         var addFriendModal = document.getElementById('addFriendModal');
         var modalOverlay = document.getElementById('modalOverlay');
         var friendModalClose = document.getElementById('friendModalClose');
@@ -145,7 +141,6 @@
         friendModalClose.addEventListener('click', closeModal);
         modalOverlay.addEventListener('click', closeModal);
 
-        // Add Credits
         document.getElementById('addCreditsBtn').addEventListener('click', async function() {
             if (!isLoggedIn) {
                 alert('Please login first!');
@@ -165,7 +160,6 @@
             }
         });
 
-        // Add Friend Button
         document.getElementById('addFriendBtn').addEventListener('click', function() {
             if (!isLoggedIn) {
                 alert('Please login first!');
@@ -176,7 +170,6 @@
             modalOverlay.classList.add('active');
         });
 
-        // Add Friend Form
         document.getElementById('addFriendForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             if (!isLoggedIn || !currentUser) return;
@@ -196,7 +189,6 @@
             }
         });
 
-        // Logout or Login
         document.getElementById('logoutBtn').addEventListener('click', function() {
             if (isLoggedIn) {
                 clearCurrentUser();

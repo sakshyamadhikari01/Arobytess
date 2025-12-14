@@ -197,7 +197,6 @@
     background: #c82333;
 }
 
-/* Modal Styles */
 .modal {
     position: fixed;
     top: 50%;
@@ -285,7 +284,6 @@
     border-color: var(--primary-dark);
 }
 
-/* Responsive */
 @media (max-width: 480px) {
     .profile-card {
         padding: 30px 20px;
