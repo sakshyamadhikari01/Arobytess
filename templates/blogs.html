@@ -10,11 +10,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Amarna:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <!-- Full page menu -->
     <div class="fullpage-menu" id="fullpageMenu">
         <button class="fullpage-close" id="fullpageClose">✕</button>
         <ul class="fullpage-nav">
             <li><a href="home.html">Home</a></li>
-            <li><a href="#">AI Detection</a></li>
+            <li><a href="ai-detection.html">AI Detection</a></li>
             <li><a href="fertilizers.html">Find Fertilizers</a></li>
             <li><a href="blogs.html">Agro Blogs</a></li>
             <li><a href="community.html">Community</a></li>
@@ -23,6 +24,7 @@
         </ul>
     </div>
 
+    <!-- Slide menu -->
     <div class="slider-menu" id="sliderMenu">
         <div class="slider-header">
             <span class="slider-title">Menu</span>
@@ -30,7 +32,7 @@
         </div>
         <ul class="slider-nav">
             <li><a href="home.html">Home</a></li>
-            <li><a href="#">AI Detection</a></li>
+            <li><a href="ai-detection.html">AI Detection</a></li>
             <li><a href="fertilizers.html">Find Fertilizers</a></li>
             <li><a href="blogs.html">Agro Blogs</a></li>
             <li><a href="community.html">Community</a></li>
@@ -42,15 +44,17 @@
 
     <button class="menu-toggle" id="menuToggle">☰</button>
 
+    <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
             <a href="home.html" class="logo">
-                <img src="/static/images/groot.png" alt="Gaun Roots Logo" class="logo-img">Gaun Roots
+                <img src="/static/images/groot.png" alt="Gaun Roots Logo" class="logo-img">
+                Gaun Roots
             </a>
             <button class="nav-toggle" id="navToggle">☰</button>
             <ul class="nav-menu" id="navMenu">
                 <li><a href="home.html" class="nav-link">Home</a></li>
-                <li><a href="#" class="nav-link">AI Detection</a></li>
+                <li><a href="ai-detection.html" class="nav-link">AI Detection</a></li>
                 <li><a href="fertilizers.html" class="nav-link">Find Fertilizers</a></li>
                 <li><a href="blogs.html" class="nav-link active">Agro Blogs</a></li>
                 <li><a href="community.html" class="nav-link">Community</a></li>
@@ -61,24 +65,27 @@
     </nav>
 
     <div class="blog-page">
+        <!-- Hero section -->
         <section class="blog-hero">
             <div class="blog-hero-content">
                 <h1>Agro Blogs</h1>
-                <p>Share your farming knowledge and learn from fellow farmers about plant diseases</p>
+                <p>Real stories from real farmers - share what's working (and what's not)</p>
             </div>
         </section>
 
+        <!-- Blog content -->
         <section class="blog-section">
             <div class="container">
                 <div class="blog-header">
-                    <h2 class="section-title">Latest Disease Reports</h2>
-                    <button class="btn btn-primary" id="openBlogForm">+ Add New Blog</button>
+                    <h2 class="section-title">Recent Posts</h2>
+                    <button class="btn btn-primary" id="openBlogForm">+ Share Your Story</button>
                 </div>
 
+                <!-- Blog form modal -->
                 <div class="blog-form-container" id="blogFormContainer">
                     <div class="blog-form-wrapper">
                         <div class="form-header">
-                            <h3>Share Your Disease Report</h3>
+                            <h3>What's happening on your farm?</h3>
                             <button class="form-close" id="closeBlogForm">✕</button>
                         </div>
                         <form id="blogForm">
@@ -122,25 +129,26 @@
                     </div>
                 </div>
 
+                <!-- Blog posts grid -->
                 <div class="blog-grid" id="blogGrid">
                     <article class="blog-card">
                         <div class="blog-card-header">
                             <span class="crop-tag tomato">Tomato</span>
                             <span class="blog-date">Dec 10, 2024</span>
                         </div>
-                        <h3 class="blog-title">Late Blight Destroying My Tomato Crop</h3>
+                        <h3 class="blog-title">Late Blight hit my tomatoes hard this year</h3>
                         <div class="blog-author">
                             <div class="author-avatar">RK</div>
                             <div class="author-info">
                                 <span class="author-name">Ram Kumar</span>
-                                <span class="author-location">Chitwan District</span>
+                                <span class="author-location">Chitwan</span>
                             </div>
                         </div>
                         <div class="blog-content">
-                            <h4>Symptoms:</h4>
-                            <p>I noticed dark brown spots appearing on the leaves of my tomato plants. The spots started small but quickly spread. Within a week, the leaves turned yellow and started wilting.</p>
-                            <h4>Treatment:</h4>
-                            <p>I consulted with the local agriculture office and they recommended copper-based fungicide spray. I applied it every 7 days for 3 weeks.</p>
+                            <h4>What I saw:</h4>
+                            <p>Started with these brown spots on the leaves - thought it was nothing at first. Big mistake. Spread to half my plants in about a week. Leaves went yellow then just died off.</p>
+                            <h4>What helped:</h4>
+                            <p>Went to the krishi office and they gave me some copper spray. Had to do it every week for almost a month but it stopped spreading. Lost maybe 30% of the crop though.</p>
                         </div>
                         <div class="blog-footer">
                             <span class="helpful-count">24 farmers found this helpful</span>
@@ -152,19 +160,19 @@
                             <span class="crop-tag potato">Potato</span>
                             <span class="blog-date">Dec 8, 2024</span>
                         </div>
-                        <h3 class="blog-title">Black Scurf on Potato Tubers</h3>
+                        <h3 class="blog-title">Black stuff on my potatoes - anyone else?</h3>
                         <div class="blog-author">
                             <div class="author-avatar">SM</div>
                             <div class="author-info">
                                 <span class="author-name">Sita Maya</span>
-                                <span class="author-location">Kavre District</span>
+                                <span class="author-location">Kavre</span>
                             </div>
                         </div>
                         <div class="blog-content">
-                            <h4>Symptoms:</h4>
-                            <p>When I harvested my potatoes, I found black, hard masses stuck to the skin of the tubers. Some potatoes had cracked skin.</p>
-                            <h4>Treatment:</h4>
-                            <p>For next season, I'm treating seed potatoes with fungicide before planting. I've also started rotating crops.</p>
+                            <h4>What I saw:</h4>
+                            <p>Dug up my potatoes and found this black crusty stuff stuck to them. Couldn't scrub it off. Some of them had cracks too. Never seen this before in 10 years of farming.</p>
+                            <h4>What I'm trying:</h4>
+                            <p>My neighbor said to treat the seed potatoes before planting next time. Also gonna try planting something else in that field for a season.</p>
                         </div>
                         <div class="blog-footer">
                             <span class="helpful-count">18 farmers found this helpful</span>
@@ -176,19 +184,19 @@
                             <span class="crop-tag chili">Chili</span>
                             <span class="blog-date">Dec 3, 2024</span>
                         </div>
-                        <h3 class="blog-title">Anthracnose Ruining Chili Harvest</h3>
+                        <h3 class="blog-title">My chilies are rotting before I can pick them</h3>
                         <div class="blog-author">
                             <div class="author-avatar">KD</div>
                             <div class="author-info">
                                 <span class="author-name">Krishna Devi</span>
-                                <span class="author-location">Bara District</span>
+                                <span class="author-location">Bara</span>
                             </div>
                         </div>
                         <div class="blog-content">
-                            <h4>Symptoms:</h4>
-                            <p>My ripe chili fruits developed sunken, circular spots that turned dark. The spots had concentric rings.</p>
-                            <h4>Treatment:</h4>
-                            <p>I started spraying Mancozeb fungicide at flowering stage and continued every 10 days.</p>
+                            <h4>What I saw:</h4>
+                            <p>The red ones get these round sunken spots that go dark. Looks like someone poked them. Ruined maybe half my harvest this time.</p>
+                            <h4>What helped:</h4>
+                            <p>Started spraying Mancozeb when the flowers came out. Every 10 days or so. Seems to be working on the new batch.</p>
                         </div>
                         <div class="blog-footer">
                             <span class="helpful-count">42 farmers found this helpful</span>
@@ -199,12 +207,13 @@
         </section>
     </div>
 
+    <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
                 <div class="footer-brand">
                     <h3>Gaun Roots</h3>
-                    <p>Empowering rural agriculture through technology and community</p>
+                    <p>Made with love in Nepal</p>
                 </div>
                 <div class="footer-social">
                     <h4>Follow Us</h4>
@@ -224,121 +233,135 @@
 
     <script src="/static/js/auth.js"></script>
     <script>
-        var navToggle = document.getElementById('navToggle');
-        var navMenu = document.getElementById('navMenu');
+    // Navigation toggle
+    var navToggle = document.getElementById('navToggle');
+    var navMenu = document.getElementById('navMenu');
 
-        navToggle.addEventListener('click', function() {
-            navMenu.classList.toggle('active');
-        });
+    navToggle.addEventListener('click', function() {
+        navMenu.classList.toggle('active');
+    });
 
-        window.addEventListener('scroll', function() {
-            var navbar = document.querySelector('.navbar');
-            if (window.scrollY > 50) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
-            }
-        });
-
-        var menuToggle = document.getElementById('menuToggle');
-        var sliderMenu = document.getElementById('sliderMenu');
-        var sliderClose = document.getElementById('sliderClose');
-        var sliderOverlay = document.getElementById('sliderOverlay');
-
-        function openMenu() {
-            sliderMenu.classList.add('active');
-            sliderOverlay.classList.add('active');
+    // Scroll effect for navbar
+    window.addEventListener('scroll', function() {
+        var navbar = document.querySelector('.navbar');
+        if (window.scrollY > 50) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
         }
+    });
 
-        function closeMenu() {
-            sliderMenu.classList.remove('active');
-            sliderOverlay.classList.remove('active');
-        }
+    // Slider menu controls
+    var menuToggle = document.getElementById('menuToggle');
+    var sliderMenu = document.getElementById('sliderMenu');
+    var sliderClose = document.getElementById('sliderClose');
+    var sliderOverlay = document.getElementById('sliderOverlay');
 
-        menuToggle.addEventListener('click', openMenu);
-        sliderClose.addEventListener('click', closeMenu);
-        sliderOverlay.addEventListener('click', closeMenu);
+    function openSlider() {
+        sliderMenu.classList.add('active');
+        sliderOverlay.classList.add('active');
+    }
 
-        var openBlogForm = document.getElementById('openBlogForm');
-        var closeBlogForm = document.getElementById('closeBlogForm');
-        var blogFormContainer = document.getElementById('blogFormContainer');
-        var blogForm = document.getElementById('blogForm');
-        var blogGrid = document.getElementById('blogGrid');
+    function closeSlider() {
+        sliderMenu.classList.remove('active');
+        sliderOverlay.classList.remove('active');
+    }
 
-        openBlogForm.addEventListener('click', function() {
-            blogFormContainer.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        });
+    menuToggle.addEventListener('click', openSlider);
+    sliderClose.addEventListener('click', closeSlider);
+    sliderOverlay.addEventListener('click', closeSlider);
 
-        closeBlogForm.addEventListener('click', function() {
+    // Blog form controls
+    var openBlogForm = document.getElementById('openBlogForm');
+    var closeBlogForm = document.getElementById('closeBlogForm');
+    var blogFormContainer = document.getElementById('blogFormContainer');
+    var blogForm = document.getElementById('blogForm');
+    var blogGrid = document.getElementById('blogGrid');
+
+    openBlogForm.addEventListener('click', function() {
+        blogFormContainer.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    });
+
+    closeBlogForm.addEventListener('click', function() {
+        blogFormContainer.classList.remove('active');
+        document.body.style.overflow = '';
+    });
+
+    blogFormContainer.addEventListener('click', function(e) {
+        if (e.target === blogFormContainer) {
             blogFormContainer.classList.remove('active');
             document.body.style.overflow = '';
+        }
+    });
+
+    // Blog form submission
+    blogForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        var farmerName = document.getElementById('farmerName').value;
+        var location = document.getElementById('location').value;
+        var cropType = document.getElementById('cropType').value;
+        var diseaseTitle = document.getElementById('diseaseTitle').value;
+        var symptoms = document.getElementById('symptoms').value;
+        var treatment = document.getElementById('treatment').value;
+
+        // Generate initials from name
+        var initials = farmerName.split(' ').map(function(n) {
+            return n[0];
+        }).join('').toUpperCase().substring(0, 2);
+
+        // Format today's date
+        var today = new Date().toLocaleDateString('en-US', {
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric'
         });
 
-        blogFormContainer.addEventListener('click', function(e) {
-            if (e.target === blogFormContainer) {
-                blogFormContainer.classList.remove('active');
-                document.body.style.overflow = '';
-            }
+        var cropClass = cropType.toLowerCase();
+
+        // Create new blog card
+        var newBlog = document.createElement('article');
+        newBlog.className = 'blog-card new-blog';
+        
+        var treatmentHtml = treatment ? '<h4>Treatment:</h4><p>' + treatment + '</p>' : '';
+        
+        newBlog.innerHTML = 
+            '<div class="blog-card-header">' +
+                '<span class="crop-tag ' + cropClass + '">' + cropType + '</span>' +
+                '<span class="blog-date">' + today + '</span>' +
+            '</div>' +
+            '<h3 class="blog-title">' + diseaseTitle + '</h3>' +
+            '<div class="blog-author">' +
+                '<div class="author-avatar">' + initials + '</div>' +
+                '<div class="author-info">' +
+                    '<span class="author-name">' + farmerName + '</span>' +
+                    '<span class="author-location">' + location + '</span>' +
+                '</div>' +
+            '</div>' +
+            '<div class="blog-content">' +
+                '<h4>Symptoms:</h4>' +
+                '<p>' + symptoms + '</p>' +
+                treatmentHtml +
+            '</div>' +
+            '<div class="blog-footer">' +
+                '<span class="helpful-count">0 farmers found this helpful</span>' +
+            '</div>';
+
+        // Add to grid
+        blogGrid.insertBefore(newBlog, blogGrid.firstChild);
+
+        // Reset and close form
+        blogForm.reset();
+        blogFormContainer.classList.remove('active');
+        document.body.style.overflow = '';
+
+        // Scroll to new post
+        newBlog.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center'
         });
-
-        blogForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            var farmerName = document.getElementById('farmerName').value;
-            var location = document.getElementById('location').value;
-            var cropType = document.getElementById('cropType').value;
-            var diseaseTitle = document.getElementById('diseaseTitle').value;
-            var symptoms = document.getElementById('symptoms').value;
-            var treatment = document.getElementById('treatment').value;
-
-            var initials = farmerName.split(' ').map(function(n) {
-                return n[0];
-            }).join('').toUpperCase().substring(0, 2);
-
-            var today = new Date().toLocaleDateString('en-US', {
-                month: 'short',
-                day: 'numeric',
-                year: 'numeric'
-            });
-
-            var cropClass = cropType.toLowerCase();
-
-            var newBlog = document.createElement('article');
-            newBlog.className = 'blog-card new-blog';
-            newBlog.innerHTML =
-                '<div class="blog-card-header">' +
-                    '<span class="crop-tag ' + cropClass + '">' + cropType + '</span>' +
-                    '<span class="blog-date">' + today + '</span>' +
-                '</div>' +
-                '<h3 class="blog-title">' + diseaseTitle + '</h3>' +
-                '<div class="blog-author">' +
-                    '<div class="author-avatar">' + initials + '</div>' +
-                    '<div class="author-info">' +
-                        '<span class="author-name">' + farmerName + '</span>' +
-                        '<span class="author-location">' + location + '</span>' +
-                    '</div>' +
-                '</div>' +
-                '<div class="blog-content">' +
-                    '<h4>Symptoms:</h4>' +
-                    '<p>' + symptoms + '</p>' +
-                    (treatment ? '<h4>Treatment:</h4><p>' + treatment + '</p>' : '') +
-                '</div>' +
-                '<div class="blog-footer">' +
-                    '<span class="helpful-count">0 farmers found this helpful</span>' +
-                '</div>';
-
-            blogGrid.insertBefore(newBlog, blogGrid.firstChild);
-
-            blogForm.reset();
-            blogFormContainer.classList.remove('active');
-            document.body.style.overflow = '';
-
-            newBlog.scrollIntoView({
-                behavior: 'smooth',
-                block: 'center'
-            });
-        });
+    });
     </script>
 </body>
 </html>

@@ -1,61 +1,78 @@
-.detection-hero {
-    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
-    padding: 120px 20px 60px;
-    text-align: center;
-    color: var(--white);
+/*
+ * AI Detection Page Styles
+ * Plant disease detection interface
+ */
+
+.detection-page {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0d2818 0%, #1a472a 50%, #2d5a3d 100%);
+    padding-top: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
-.detection-hero h1 {
+.detection-header {
+    text-align: center;
+    color: #ffffff;
+    margin-bottom: 25px;
+    padding: 0 20px;
+}
+
+.detection-header h1 {
     font-family: 'Amarna', sans-serif;
     font-size: 2.5rem;
     margin-bottom: 10px;
+    color: #ffffff;
 }
 
-.detection-hero p {
-    opacity: 0.9;
-    font-size: 1.1rem;
+.detection-header p {
+    color: #c5d9be;
+    font-size: 1rem;
 }
 
-.detection-section {
-    padding: 40px 20px 80px;
-    background: var(--bg-light);
-    min-height: 60vh;
+.detection-content {
+    width: 100%;
+    max-width: 550px;
+    padding: 0 20px 20px;
 }
 
 .detection-card {
-    background: var(--white);
+    background: #1a472a;
     border-radius: 16px;
-    padding: 30px;
-    max-width: 600px;
-    margin: 0 auto 30px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    padding: 25px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.25);
 }
 
+/* Tab navigation */
 .input-tabs {
     display: flex;
     gap: 10px;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
 }
 
 .tab-btn {
     flex: 1;
-    padding: 12px 20px;
-    border: 2px solid var(--secondary);
-    background: var(--white);
+    padding: 12px 15px;
+    border: 2px solid #c5d9be;
+    background: #1a472a;
+    color: #ffffff;
     border-radius: 10px;
     cursor: pointer;
     font-weight: 500;
-    transition: all 0.3s;
+    font-family: 'Poppins', sans-serif;
+    transition: background 0.3s, color 0.3s, border-color 0.3s;
 }
 
 .tab-btn.active {
-    background: var(--primary);
-    color: var(--white);
-    border-color: var(--primary);
+    background: #c5d9be;
+    color: #0d2818;
+    border-color: #c5d9be;
 }
 
 .tab-btn:hover:not(.active) {
-    background: var(--accent);
+    background: rgba(255,255,255,0.1);
 }
 
 .tab-content {
@@ -66,32 +83,31 @@
     display: block;
 }
 
+/* Upload area */
 .upload-area {
-    border: 2px dashed var(--secondary);
+    border: 2px dashed #c5d9be;
     border-radius: 12px;
-    padding: 50px 20px;
+    padding: 40px 20px;
     text-align: center;
-    transition: all 0.3s;
+    transition: border-color 0.3s, background 0.3s;
     cursor: pointer;
+    background: rgba(255,255,255,0.05);
 }
 
-.upload-area:hover, .upload-area.dragover {
-    border-color: var(--primary);
-    background: var(--accent);
-}
-
-.upload-icon {
-    font-size: 4rem;
-    margin-bottom: 15px;
+.upload-area:hover,
+.upload-area.dragover {
+    border-color: #ffffff;
+    background: rgba(255,255,255,0.1);
 }
 
 .upload-area p {
-    color: var(--text-dark);
-    margin-bottom: 5px;
+    color: #ffffff;
+    margin-bottom: 8px;
+    font-size: 1rem;
 }
 
 .upload-area span {
-    color: var(--text-light);
+    color: rgba(255,255,255,0.7);
     font-size: 0.9rem;
 }
 
@@ -99,24 +115,26 @@
     display: inline-block;
     margin-top: 15px;
     padding: 10px 25px;
-    background: var(--primary);
-    color: var(--white);
+    background: #c5d9be;
+    color: #0d2818;
     border-radius: 25px;
     cursor: pointer;
-    transition: all 0.3s;
+    font-weight: 500;
+    transition: background 0.3s;
 }
 
 .upload-btn:hover {
-    background: var(--primary-dark);
+    background: #ffffff;
 }
 
+/* Camera section */
 .camera-container {
     text-align: center;
 }
 
 #cameraFeed {
     width: 100%;
-    max-height: 350px;
+    max-height: 250px;
     border-radius: 12px;
     background: #000;
     object-fit: cover;
@@ -132,51 +150,53 @@
 
 .camera-controls .btn {
     padding: 10px 20px;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
 }
 
+/* Preview section */
 .preview-section {
-    margin-top: 25px;
+    margin-top: 20px;
     text-align: center;
-    padding-top: 25px;
-    border-top: 1px solid var(--secondary);
+    padding-top: 20px;
+    border-top: 1px solid rgba(255,255,255,0.2);
 }
 
 .preview-section h3 {
     margin-bottom: 15px;
-    color: var(--primary-dark);
+    color: #c5d9be;
 }
 
 #previewImage {
     max-width: 100%;
-    max-height: 300px;
+    max-height: 200px;
     border-radius: 12px;
-    margin-bottom: 20px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    margin-bottom: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
 }
 
+/* Results card */
 .result-card {
-    background: var(--white);
+    background: #1a472a;
     border-radius: 16px;
-    padding: 30px;
-    max-width: 600px;
-    margin: 0 auto;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    padding: 25px;
+    margin-top: 15px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.25);
 }
 
 .result-card h2 {
     text-align: center;
-    color: var(--primary-dark);
-    margin-bottom: 25px;
+    color: #ffffff;
+    margin-bottom: 20px;
+    font-size: 1.3rem;
 }
 
 .result-status {
     text-align: center;
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     font-weight: 600;
-    padding: 20px;
+    padding: 15px;
     border-radius: 12px;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
 .result-status.healthy {
@@ -189,39 +209,84 @@
     color: #721c24;
 }
 
-.confidence-bar {
-    height: 12px;
-    background: var(--secondary);
-    border-radius: 6px;
-    overflow: hidden;
-    margin-bottom: 10px;
-}
-
-.confidence-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--primary), var(--primary-light));
-    border-radius: 6px;
-    transition: width 0.5s ease;
-}
-
-.confidence-text {
-    text-align: center;
-    color: var(--text-light);
-    margin-bottom: 20px;
-}
-
+/* Result details */
 .result-details {
-    background: var(--accent);
-    padding: 20px;
+    background: rgba(255,255,255,0.1);
+    padding: 15px;
     border-radius: 10px;
-    line-height: 1.8;
+    line-height: 1.6;
+    font-size: 0.9rem;
 }
 
 .result-details h4 {
-    color: var(--primary-dark);
+    color: #c5d9be;
+    margin-bottom: 12px;
+    margin-top: 15px;
+}
+
+.result-details h4:first-child {
+    margin-top: 0;
+}
+
+.result-details p {
+    color: rgba(255,255,255,0.8);
+}
+
+/* Fertilizer recommendations */
+.fertilizer-recommendations {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
     margin-bottom: 10px;
 }
 
+.fertilizer-item {
+    background: rgba(255,255,255,0.08);
+    padding: 12px;
+    border-radius: 8px;
+    border-left: 3px solid #c5d9be;
+}
+
+.fertilizer-item strong {
+    color: #ffffff;
+    font-size: 0.95rem;
+}
+
+.fertilizer-item span {
+    color: rgba(255,255,255,0.7);
+    font-size: 0.85rem;
+}
+
+/* Preventive measures list */
+.preventive-measures {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.preventive-measures li {
+    color: rgba(255,255,255,0.85);
+    padding: 8px 0 8px 20px;
+    position: relative;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.preventive-measures li:last-child {
+    border-bottom: none;
+}
+
+.preventive-measures li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 14px;
+    width: 8px;
+    height: 8px;
+    background: #c5d9be;
+    border-radius: 50%;
+}
+
+/* Loading overlay */
 .loading-overlay {
     position: fixed;
     top: 0;
@@ -237,26 +302,48 @@
 }
 
 .loading-overlay p {
-    color: var(--white);
-    margin-top: 20px;
-    font-size: 1.1rem;
+    color: #ffffff;
+    margin-top: 15px;
+    font-size: 1rem;
 }
 
 .spinner {
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
     border: 4px solid rgba(255,255,255,0.3);
-    border-top-color: var(--white);
+    border-top-color: #ffffff;
     border-radius: 50%;
-    animation: spin 1s linear infinite;
+    animation: rotate 1s linear infinite;
 }
 
-@keyframes spin {
+@keyframes rotate {
     to { transform: rotate(360deg); }
 }
 
+/* Hamburger menu lines */
+.hamburger-line {
+    display: block;
+    width: 20px;
+    height: 2px;
+    background: #ffffff;
+    margin: 4px 0;
+}
+
+/* Mobile adjustments */
 @media (max-width: 600px) {
-    .detection-hero h1 { font-size: 1.8rem; }
-    .input-tabs { flex-direction: column; }
-    .camera-controls { flex-direction: column; }
+    .detection-header h1 {
+        font-size: 1.8rem;
+    }
+    
+    .input-tabs {
+        flex-direction: column;
+    }
+    
+    .camera-controls {
+        flex-direction: column;
+    }
+    
+    .detection-page {
+        padding-top: 70px;
+    }
 }

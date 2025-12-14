@@ -15,15 +15,17 @@
             <div class="login-header">
                 <img src="/static/images/groot.png" alt="Gaun Roots Logo" class="login-logo">
                 <h1>Gaun Roots</h1>
-                <p>Welcome back! Please login to continue</p>
+                <p>Good to see you again!</p>
             </div>
 
+            <!-- User type selection -->
             <div class="user-type-tabs">
                 <button class="tab-btn active" data-type="farmer">Farmer</button>
                 <button class="tab-btn" data-type="vet">Vet</button>
                 <button class="tab-btn" data-type="seller">Seller</button>
             </div>
 
+            <!-- Login form -->
             <form id="loginForm" class="login-form">
                 <div class="form-group">
                     <label for="userName">Your Name</label>
@@ -39,11 +41,12 @@
             </div>
         </div>
 
+        <!-- Registration modal -->
         <div class="modal" id="registerModal">
             <div class="modal-content">
                 <button class="modal-close" id="modalClose">✕</button>
                 <h2>Create Account</h2>
-                <p>Join Gaun Roots community</p>
+                <p>Takes like 10 seconds</p>
 
                 <div class="user-type-tabs">
                     <button class="tab-btn active" data-type="farmer" id="regFarmerTab">Farmer</button>
@@ -66,104 +69,112 @@
 
     <script src="/static/js/api.js"></script>
     <script>
-        var currentUser = getCurrentUser();
-        if (currentUser) {
-            if (currentUser.type === 'seller') {
-                window.location.href = 'seller-profile.html';
-            } else {
-                window.location.href = 'profile.html';
-            }
+    // Redirect if already logged in
+    var currentUser = getCurrentUser();
+    if (currentUser) {
+        if (currentUser.type === 'seller') {
+            window.location.href = 'seller-profile.html';
+        } else {
+            window.location.href = 'profile.html';
         }
+    }
 
-        var loginTabs = document.querySelectorAll('.login-card .tab-btn');
-        var userTypeInput = document.getElementById('userType');
+    // Login tab switching
+    var loginTabs = document.querySelectorAll('.login-card .tab-btn');
+    var userTypeInput = document.getElementById('userType');
 
-        loginTabs.forEach(function(tab) {
-            tab.addEventListener('click', function() {
-                loginTabs.forEach(function(t) { t.classList.remove('active'); });
-                this.classList.add('active');
-                userTypeInput.value = this.dataset.type;
+    loginTabs.forEach(function(tab) {
+        tab.addEventListener('click', function() {
+            loginTabs.forEach(function(t) { 
+                t.classList.remove('active'); 
             });
+            this.classList.add('active');
+            userTypeInput.value = this.dataset.type;
         });
+    });
 
-        var regFarmerTab = document.getElementById('regFarmerTab');
-        var regVetTab = document.getElementById('regVetTab');
-        var regSellerTab = document.getElementById('regSellerTab');
-        var regUserTypeInput = document.getElementById('regUserType');
+    // Registration tab switching
+    var regFarmerTab = document.getElementById('regFarmerTab');
+    var regVetTab = document.getElementById('regVetTab');
+    var regSellerTab = document.getElementById('regSellerTab');
+    var regUserTypeInput = document.getElementById('regUserType');
 
-        regFarmerTab.addEventListener('click', function() {
-            regFarmerTab.classList.add('active');
-            regVetTab.classList.remove('active');
-            regSellerTab.classList.remove('active');
-            regUserTypeInput.value = 'farmer';
-        });
+    regFarmerTab.addEventListener('click', function() {
+        regFarmerTab.classList.add('active');
+        regVetTab.classList.remove('active');
+        regSellerTab.classList.remove('active');
+        regUserTypeInput.value = 'farmer';
+    });
 
-        regVetTab.addEventListener('click', function() {
-            regVetTab.classList.add('active');
-            regFarmerTab.classList.remove('active');
-            regSellerTab.classList.remove('active');
-            regUserTypeInput.value = 'vet';
-        });
+    regVetTab.addEventListener('click', function() {
+        regVetTab.classList.add('active');
+        regFarmerTab.classList.remove('active');
+        regSellerTab.classList.remove('active');
+        regUserTypeInput.value = 'vet';
+    });
 
-        regSellerTab.addEventListener('click', function() {
-            regSellerTab.classList.add('active');
-            regFarmerTab.classList.remove('active');
-            regVetTab.classList.remove('active');
-            regUserTypeInput.value = 'seller';
-        });
+    regSellerTab.addEventListener('click', function() {
+        regSellerTab.classList.add('active');
+        regFarmerTab.classList.remove('active');
+        regVetTab.classList.remove('active');
+        regUserTypeInput.value = 'seller';
+    });
 
-        var registerLink = document.getElementById('registerLink');
-        var registerModal = document.getElementById('registerModal');
-        var modalOverlay = document.getElementById('modalOverlay');
-        var modalClose = document.getElementById('modalClose');
+    // Modal controls
+    var registerLink = document.getElementById('registerLink');
+    var registerModal = document.getElementById('registerModal');
+    var modalOverlay = document.getElementById('modalOverlay');
+    var modalClose = document.getElementById('modalClose');
 
-        registerLink.addEventListener('click', function(e) {
-            e.preventDefault();
-            registerModal.classList.add('active');
-            modalOverlay.classList.add('active');
-        });
+    registerLink.addEventListener('click', function(e) {
+        e.preventDefault();
+        registerModal.classList.add('active');
+        modalOverlay.classList.add('active');
+    });
 
-        function closeModal() {
-            registerModal.classList.remove('active');
-            modalOverlay.classList.remove('active');
+    function hideModal() {
+        registerModal.classList.remove('active');
+        modalOverlay.classList.remove('active');
+    }
+
+    modalClose.addEventListener('click', hideModal);
+    modalOverlay.addEventListener('click', hideModal);
+
+    // Login form submission
+    document.getElementById('loginForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        var name = document.getElementById('userName').value.trim();
+        var type = document.getElementById('userType').value;
+
+        if (name) {
+            try {
+                var user = await api.login(name, type);
+                setCurrentUser(user);
+                alert('Welcome back, ' + name + '!');
+                window.location.href = 'home.html';
+            } catch (err) {
+                alert(err.message || 'User not found. Please register first.');
+            }
         }
+    });
 
-        modalClose.addEventListener('click', closeModal);
-        modalOverlay.addEventListener('click', closeModal);
+    // Registration form submission
+    document.getElementById('registerForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        var name = document.getElementById('regName').value.trim();
+        var type = document.getElementById('regUserType').value;
 
-        document.getElementById('loginForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            var name = document.getElementById('userName').value.trim();
-            var type = document.getElementById('userType').value;
-
-            if (name) {
-                try {
-                    var user = await api.login(name, type);
-                    setCurrentUser(user);
-                    alert('Welcome back, ' + name + '!');
-                    window.location.href = 'home.html';
-                } catch (err) {
-                    alert(err.message || 'User not found. Please register first.');
-                }
+        if (name) {
+            try {
+                var user = await api.register(name, type);
+                setCurrentUser(user);
+                alert('Registration successful! Welcome, ' + name + '!');
+                window.location.href = 'home.html';
+            } catch (err) {
+                alert(err.message || 'Registration failed.');
             }
-        });
-
-        document.getElementById('registerForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            var name = document.getElementById('regName').value.trim();
-            var type = document.getElementById('regUserType').value;
-
-            if (name) {
-                try {
-                    var user = await api.register(name, type);
-                    setCurrentUser(user);
-                    alert('Registration successful! Welcome, ' + name + '!');
-                    window.location.href = 'home.html';
-                } catch (err) {
-                    alert(err.message || 'Registration failed.');
-                }
-            }
-        });
+        }
+    });
     </script>
 </body>
 </html>

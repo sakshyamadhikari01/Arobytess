@@ -1,3 +1,8 @@
+/*
+ * Profile Page Styles
+ * User dashboard and profile management
+ */
+
 .profile-container {
     min-height: 100vh;
     background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 50%, var(--primary-light) 100%);
@@ -67,6 +72,7 @@
     color: var(--primary-dark);
 }
 
+/* Notification section */
 .notification-bar {
     background: linear-gradient(135deg, #fff9e6 0%, #fff3cd 100%);
     border: 2px solid #ffc107;
@@ -89,7 +95,6 @@
     height: 20px;
     background: var(--primary-dark);
     border-radius: 50%;
-    position: relative;
 }
 
 .notification-title {
@@ -169,6 +174,7 @@
     font-size: 0.9rem;
 }
 
+/* Stats section */
 .profile-stats {
     display: flex;
     gap: 20px;
@@ -202,6 +208,7 @@
     font-weight: 500;
 }
 
+/* Action buttons */
 .profile-actions {
     display: flex;
     gap: 15px;
@@ -224,6 +231,7 @@
     color: var(--white);
 }
 
+/* Friends section */
 .profile-section {
     margin-bottom: 25px;
 }
@@ -282,6 +290,7 @@
     color: var(--text-dark);
 }
 
+/* Footer and logout */
 .profile-footer {
     text-align: center;
     padding-top: 20px;
@@ -299,6 +308,7 @@
     background: #c82333;
 }
 
+/* Modal styles */
 .modal {
     position: fixed;
     top: 50%;
@@ -312,7 +322,7 @@
     z-index: 2001;
     opacity: 0;
     visibility: hidden;
-    transition: all 0.3s ease;
+    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
 }
 
 .modal.active {
@@ -331,7 +341,7 @@
     z-index: 2000;
     opacity: 0;
     visibility: hidden;
-    transition: all 0.3s;
+    transition: opacity 0.3s, visibility 0.3s;
 }
 
 .modal-overlay.active {
@@ -386,17 +396,21 @@
     border-color: var(--primary-dark);
 }
 
+/* Mobile adjustments */
 @media (max-width: 480px) {
     .profile-card {
         padding: 30px 20px;
     }
+    
     .profile-stats {
         flex-direction: column;
         gap: 15px;
     }
+    
     .profile-actions {
         flex-direction: column;
     }
+    
     .stat-value {
         font-size: 2rem;
     }

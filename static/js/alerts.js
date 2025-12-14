@@ -1,141 +1,157 @@
-class AlertSystem {
-    constructor() {
-        this.baseUrl = '/api';
-        this.init();
-    }
+// handles alert signups and disease reports
 
-    init() {
-        this.loadRecentAlerts();
-        this.setupFormHandlers();
+var AlertSystem = (function() {
+    
+    var apiEndpoint = '/api';
+    
+    // Initialize the alert system
+    function init() {
+        fetchRecentAlerts();
+        attachFormListeners();
     }
-
-    async registerForAlerts(formData) {
+    
+    // Register farmer for SMS alerts
+    async function registerFarmer(formData) {
         try {
-            // Remove location from formData as it's auto-detected
-            const { location, ...dataWithoutLocation } = formData;
+            // Location is auto-detected, remove from payload
+            var payload = {
+                farmerName: formData.farmerName,
+                phoneNumber: formData.phoneNumber,
+                cropTypes: formData.cropTypes,
+                alertRadius: formData.alertRadius
+            };
             
-            const response = await fetch(`${this.baseUrl}/register-alerts`, {
+            var response = await fetch(apiEndpoint + '/register-alerts', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(dataWithoutLocation)
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
             });
 
-            const result = await response.json();
+            var result = await response.json();
             
             if (result.success) {
-                this.showNotification('Successfully registered for SMS disease alerts! Location auto-detected.', 'success');
+                displayNotification('Registration successful! You will receive SMS alerts for your area.', 'success');
                 return result;
             } else {
-                throw new Error(result.message || 'Registration failed');
+                throw new Error(result.message || 'Registration unsuccessful');
             }
         } catch (error) {
-            this.showNotification(`Registration failed: ${error.message}`, 'error');
+            displayNotification('Registration failed: ' + error.message, 'error');
             throw error;
         }
     }
 
-    async reportDisease(reportData) {
+    // Submit disease outbreak report
+    async function submitDiseaseReport(reportData) {
         try {
-            // Remove location from reportData as it's auto-detected
-            const { location, ...dataWithoutLocation } = reportData;
+            var payload = {
+                diseaseName: reportData.diseaseName,
+                cropType: reportData.cropType,
+                severity: reportData.severity,
+                description: reportData.description,
+                reporterPhone: reportData.reporterPhone
+            };
             
-            const response = await fetch(`${this.baseUrl}/report-disease`, {
+            var response = await fetch(apiEndpoint + '/report-disease', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(dataWithoutLocation)
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
             });
 
-            const result = await response.json();
+            var result = await response.json();
             
             if (result.success) {
-                this.showNotification(`Disease report submitted! Location auto-detected. ${result.notified_farmers} farmers notified via SMS.`, 'success');
+                var msg = 'Report submitted! ' + result.notified_farmers + ' farmers have been notified.';
+                displayNotification(msg, 'success');
                 return result;
             } else {
                 throw new Error(result.message || 'Report submission failed');
             }
         } catch (error) {
-            this.showNotification(`Report failed: ${error.message}`, 'error');
+            displayNotification('Report failed: ' + error.message, 'error');
             throw error;
         }
     }
 
-    async loadRecentAlerts(location = null) {
+    // Fetch recent alerts for display
+    async function fetchRecentAlerts(location) {
         try {
-            const url = location ? 
-                `${this.baseUrl}/recent-alerts?location=${encodeURIComponent(location)}` : 
-                `${this.baseUrl}/recent-alerts`;
+            var url = apiEndpoint + '/recent-alerts';
+            if (location) {
+                url += '?location=' + encodeURIComponent(location);
+            }
             
-            const response = await fetch(url);
-            const result = await response.json();
+            var response = await fetch(url);
+            var result = await response.json();
             
             if (result.success) {
-                this.displayRecentAlerts(result.alerts);
+                renderAlertsList(result.alerts);
             }
         } catch (error) {
-            console.error('Failed to load recent alerts:', error);
+            console.error('Could not load alerts:', error);
         }
     }
 
-    displayRecentAlerts(alerts) {
-        const container = document.querySelector('.recent-alerts');
+    // Render alerts in the UI
+    function renderAlertsList(alerts) {
+        var container = document.querySelector('.recent-alerts');
         if (!container) return;
 
-        const alertsHtml = alerts.map(alert => `
-            <div class="alert-item">
-                <div class="alert-info">
-                    <h4>${alert.diseaseName} in ${alert.cropType}</h4>
-                    <p>Detected in ${alert.location} - ${alert.description || 'Take immediate preventive measures'}</p>
-                </div>
-                <div class="alert-time">${this.formatTime(alert.reportedAt)}</div>
-            </div>
-        `).join('');
+        var html = '<h3 style="color: var(--white); margin-bottom: 20px;">Recent Alerts in Your Area</h3>';
+        
+        if (alerts.length === 0) {
+            html += '<p style="color: rgba(255,255,255,0.7);">No recent alerts in your area.</p>';
+        } else {
+            alerts.forEach(function(alert) {
+                html += '<div class="alert-item">' +
+                    '<div class="alert-info">' +
+                        '<h4>' + alert.diseaseName + ' in ' + alert.cropType + '</h4>' +
+                        '<p>Detected in ' + alert.location + ' - ' + (alert.description || 'Take preventive measures') + '</p>' +
+                    '</div>' +
+                    '<div class="alert-time">' + formatTimeAgo(alert.reportedAt) + '</div>' +
+                '</div>';
+            });
+        }
 
-        container.innerHTML = `
-            <h3 style="color: var(--white); margin-bottom: 20px;">Recent Alerts in Your Area</h3>
-            ${alertsHtml || '<p style="color: rgba(255,255,255,0.7);">No recent alerts in your area.</p>'}
-        `;
+        container.innerHTML = html;
     }
 
-    setupFormHandlers() {
-        // Alert registration form
-        const alertForm = document.getElementById('alertRegistrationForm');
-        if (alertForm) {
-            alertForm.addEventListener('submit', async (e) => {
+    // Attach event listeners to forms
+    function attachFormListeners() {
+        // Registration form
+        var regForm = document.getElementById('alertRegistrationForm');
+        if (regForm) {
+            regForm.addEventListener('submit', async function(e) {
                 e.preventDefault();
                 
-                const formData = {
+                var data = {
                     farmerName: document.getElementById('farmerName').value,
                     phoneNumber: document.getElementById('phoneNumber').value,
                     cropTypes: document.getElementById('cropTypes').value,
                     alertRadius: parseInt(document.getElementById('alertRadius').value)
                 };
 
-                // Validate phone number
-                if (!this.validatePhoneNumber(formData.phoneNumber)) {
-                    this.showNotification('Please enter a valid phone number', 'error');
+                if (!isValidPhone(data.phoneNumber)) {
+                    displayNotification('Please enter a valid phone number', 'error');
                     return;
                 }
 
                 try {
-                    await this.registerForAlerts(formData);
-                    alertForm.reset();
-                } catch (error) {
-                    // Error already handled in registerForAlerts
+                    await registerFarmer(data);
+                    regForm.reset();
+                } catch (err) {
+                    // Error handled in registerFarmer
                 }
             });
         }
 
-        // Disease report form (if exists)
-        const reportForm = document.getElementById('diseaseReportForm');
+        // Disease report form
+        var reportForm = document.getElementById('diseaseReportForm');
         if (reportForm) {
-            reportForm.addEventListener('submit', async (e) => {
+            reportForm.addEventListener('submit', async function(e) {
                 e.preventDefault();
                 
-                const reportData = {
+                var data = {
                     diseaseName: document.getElementById('diseaseName').value,
                     cropType: document.getElementById('reportCropType').value,
                     severity: document.getElementById('severity').value,
@@ -144,112 +160,101 @@ class AlertSystem {
                 };
 
                 try {
-                    await this.reportDisease(reportData);
+                    await submitDiseaseReport(data);
                     reportForm.reset();
-                } catch (error) {
-                    // Error already handled in reportDisease
+                } catch (err) {
+                    // Error handled in submitDiseaseReport
                 }
             });
         }
     }
 
-    validatePhoneNumber(phone) {
-        // Remove spaces and dashes
-        const cleanPhone = phone.replace(/[-\s]/g, '');
-        // Check if it's a valid format (10-15 digits, optionally starting with +)
-        const phoneRegex = /^\+?[0-9]{10,15}$/;
-        return phoneRegex.test(cleanPhone);
+    // Validate phone number format
+    function isValidPhone(phone) {
+        var cleaned = phone.replace(/[-\s]/g, '');
+        var pattern = /^\+?[0-9]{10,15}$/;
+        return pattern.test(cleaned);
     }
 
-    formatTime(timestamp) {
-        const date = new Date(timestamp);
-        const now = new Date();
-        const diffMs = now - date;
-        const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-        const diffDays = Math.floor(diffHours / 24);
+    // Format timestamp to relative time
+    function formatTimeAgo(timestamp) {
+        var date = new Date(timestamp);
+        var now = new Date();
+        var diffMs = now - date;
+        var diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+        var diffDays = Math.floor(diffHours / 24);
 
         if (diffHours < 1) {
             return 'Just now';
         } else if (diffHours < 24) {
-            return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+            return diffHours + ' hour' + (diffHours > 1 ? 's' : '') + ' ago';
         } else if (diffDays < 7) {
-            return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+            return diffDays + ' day' + (diffDays > 1 ? 's' : '') + ' ago';
         } else {
             return date.toLocaleDateString();
         }
     }
 
-    showNotification(message, type = 'info') {
-        // Create notification element
-        const notification = document.createElement('div');
-        notification.className = `notification notification-${type}`;
-        notification.innerHTML = `
-            <span>${message}</span>
-            <button onclick="this.parentElement.remove()">×</button>
-        `;
+    // Display notification toast
+    function displayNotification(message, type) {
+        type = type || 'info';
+        
+        var toast = document.createElement('div');
+        toast.className = 'toast-notification toast-' + type;
+        toast.innerHTML = '<span>' + message + '</span>' +
+            '<button onclick="this.parentElement.remove()">×</button>';
 
-        // Add styles if not already present
-        if (!document.querySelector('#notification-styles')) {
-            const styles = document.createElement('style');
-            styles.id = 'notification-styles';
-            styles.textContent = `
-                .notification {
-                    position: fixed;
-                    top: 20px;
-                    right: 20px;
-                    padding: 15px 20px;
-                    border-radius: 8px;
-                    color: white;
-                    font-weight: 500;
-                    z-index: 10000;
-                    display: flex;
-                    align-items: center;
-                    gap: 10px;
-                    max-width: 400px;
-                    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-                    animation: slideIn 0.3s ease-out;
-                }
-                .notification-success { background: #28a745; }
-                .notification-error { background: #dc3545; }
-                .notification-info { background: #17a2b8; }
-                .notification button {
-                    background: none;
-                    border: none;
-                    color: white;
-                    font-size: 18px;
-                    cursor: pointer;
-                    padding: 0;
-                    width: 20px;
-                    height: 20px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                }
-                @keyframes slideIn {
-                    from { transform: translateX(100%); opacity: 0; }
-                    to { transform: translateX(0); opacity: 1; }
-                }
-            `;
+        // Add styles if not present
+        if (!document.querySelector('#toast-styles')) {
+            var styles = document.createElement('style');
+            styles.id = 'toast-styles';
+            styles.textContent = 
+                '.toast-notification {' +
+                    'position: fixed; top: 20px; right: 20px;' +
+                    'padding: 15px 20px; border-radius: 8px;' +
+                    'color: white; font-weight: 500; z-index: 10000;' +
+                    'display: flex; align-items: center; gap: 10px;' +
+                    'max-width: 400px; box-shadow: 0 4px 12px rgba(0,0,0,0.3);' +
+                    'animation: toastSlide 0.3s ease-out;' +
+                '}' +
+                '.toast-success { background: #28a745; }' +
+                '.toast-error { background: #dc3545; }' +
+                '.toast-info { background: #17a2b8; }' +
+                '.toast-notification button {' +
+                    'background: none; border: none; color: white;' +
+                    'font-size: 18px; cursor: pointer; padding: 0;' +
+                '}' +
+                '@keyframes toastSlide {' +
+                    'from { transform: translateX(100%); opacity: 0; }' +
+                    'to { transform: translateX(0); opacity: 1; }' +
+                '}';
             document.head.appendChild(styles);
         }
 
-        document.body.appendChild(notification);
+        document.body.appendChild(toast);
 
-        // Auto remove after 5 seconds
-        setTimeout(() => {
-            if (notification.parentElement) {
-                notification.remove();
+        // Auto-remove after 5 seconds
+        setTimeout(function() {
+            if (toast.parentElement) {
+                toast.remove();
             }
         }, 5000);
     }
-}
 
-// Initialize alert system when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    window.alertSystem = new AlertSystem();
+    // Public interface
+    return {
+        init: init,
+        registerFarmer: registerFarmer,
+        submitDiseaseReport: submitDiseaseReport,
+        fetchRecentAlerts: fetchRecentAlerts
+    };
+    
+})();
+
+// Initialize when DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+    AlertSystem.init();
 });
 
-// Export for use in other scripts
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = AlertSystem;
-}
+// Make available globally
+window.alertSystem = AlertSystem;

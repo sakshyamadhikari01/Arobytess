@@ -1,206 +1,286 @@
-// Tab switching
-const tabBtns = document.querySelectorAll('.tab-btn');
-const uploadTab = document.getElementById('upload-tab');
-const cameraTab = document.getElementById('camera-tab');
+/*
+ * Plant Disease Detection Module
+ * Handles image upload, camera capture, and AI analysis
+ */
 
-tabBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-        tabBtns.forEach(b => b.classList.remove('active'));
+// DOM element references
+var tabButtons = document.querySelectorAll('.tab-btn');
+var uploadTabContent = document.getElementById('upload-tab');
+var cameraTabContent = document.getElementById('camera-tab');
+
+// Tab switching functionality
+tabButtons.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+        // Remove active state from all tabs
+        tabButtons.forEach(function(b) { 
+            b.classList.remove('active'); 
+        });
         btn.classList.add('active');
         
+        // Show appropriate content
         if (btn.dataset.tab === 'upload') {
-            uploadTab.classList.add('active');
-            cameraTab.classList.remove('active');
-            stopCamera();
+            uploadTabContent.classList.add('active');
+            cameraTabContent.classList.remove('active');
+            stopCameraStream();
         } else {
-            cameraTab.classList.add('active');
-            uploadTab.classList.remove('active');
+            cameraTabContent.classList.add('active');
+            uploadTabContent.classList.remove('active');
         }
     });
 });
 
-// File upload
-const uploadArea = document.getElementById('uploadArea');
-const fileInput = document.getElementById('fileInput');
-const previewSection = document.getElementById('previewSection');
-const previewImage = document.getElementById('previewImage');
+// File upload elements
+var dropZone = document.getElementById('uploadArea');
+var fileSelector = document.getElementById('fileInput');
+var previewContainer = document.getElementById('previewSection');
+var previewImg = document.getElementById('previewImage');
 
-uploadArea.addEventListener('click', () => fileInput.click());
+// Store current image data
+var selectedImageData = null;
 
-uploadArea.addEventListener('dragover', (e) => {
-    e.preventDefault();
-    uploadArea.classList.add('dragover');
+// Click to upload
+dropZone.addEventListener('click', function() { 
+    fileSelector.click(); 
 });
 
-uploadArea.addEventListener('dragleave', () => {
-    uploadArea.classList.remove('dragover');
+// Drag and drop handlers
+dropZone.addEventListener('dragover', function(e) {
+    e.preventDefault();
+    dropZone.classList.add('dragover');
 });
 
-uploadArea.addEventListener('drop', (e) => {
+dropZone.addEventListener('dragleave', function() {
+    dropZone.classList.remove('dragover');
+});
+
+dropZone.addEventListener('drop', function(e) {
     e.preventDefault();
-    uploadArea.classList.remove('dragover');
-    const file = e.dataTransfer.files[0];
-    if (file && file.type.startsWith('image/')) {
-        handleImageFile(file);
+    dropZone.classList.remove('dragover');
+    
+    var droppedFile = e.dataTransfer.files[0];
+    if (droppedFile && droppedFile.type.startsWith('image/')) {
+        processImageFile(droppedFile);
     }
 });
 
-fileInput.addEventListener('change', (e) => {
-    const file = e.target.files[0];
-    if (file) handleImageFile(file);
+// File input change handler
+fileSelector.addEventListener('change', function(e) {
+    var selectedFile = e.target.files[0];
+    if (selectedFile) {
+        processImageFile(selectedFile);
+    }
 });
 
-let currentImageData = null;
-
-function handleImageFile(file) {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-        currentImageData = e.target.result;
-        previewImage.src = currentImageData;
-        previewSection.style.display = 'block';
+// Process uploaded image file
+function processImageFile(file) {
+    var reader = new FileReader();
+    
+    reader.onload = function(e) {
+        selectedImageData = e.target.result;
+        previewImg.src = selectedImageData;
+        previewContainer.style.display = 'block';
         document.getElementById('resultCard').style.display = 'none';
     };
+    
     reader.readAsDataURL(file);
 }
 
-// Camera functionality
-const cameraFeed = document.getElementById('cameraFeed');
-const cameraCanvas = document.getElementById('cameraCanvas');
-const startCameraBtn = document.getElementById('startCamera');
-const captureBtn = document.getElementById('captureBtn');
-const switchCameraBtn = document.getElementById('switchCamera');
+// Camera elements
+var videoFeed = document.getElementById('cameraFeed');
+var captureCanvas = document.getElementById('cameraCanvas');
+var startCamBtn = document.getElementById('startCamera');
+var capturePhotoBtn = document.getElementById('captureBtn');
+var flipCamBtn = document.getElementById('switchCamera');
 
-let stream = null;
-let facingMode = 'environment';
+// Camera state
+var cameraStream = null;
+var cameraDirection = 'environment'; // back camera by default
+var cameraActive = false;
 
-startCameraBtn.addEventListener('click', startCamera);
-captureBtn.addEventListener('click', captureImage);
-switchCameraBtn.addEventListener('click', switchCamera);
+// Camera control event listeners
+startCamBtn.addEventListener('click', toggleCamera);
+capturePhotoBtn.addEventListener('click', takePhoto);
+flipCamBtn.addEventListener('click', flipCamera);
 
-async function startCamera() {
+// Toggle camera on/off
+function toggleCamera() {
+    if (cameraActive) {
+        stopCameraStream();
+    } else {
+        initializeCamera();
+    }
+}
+
+// Start camera stream
+async function initializeCamera() {
     try {
-        if (stream) stopCamera();
-        
-        stream = await navigator.mediaDevices.getUserMedia({
-            video: { facingMode: facingMode, width: { ideal: 640 }, height: { ideal: 480 } }
+        cameraStream = await navigator.mediaDevices.getUserMedia({
+            video: { 
+                facingMode: cameraDirection, 
+                width: { ideal: 640 }, 
+                height: { ideal: 480 } 
+            }
         });
         
-        cameraFeed.srcObject = stream;
-        startCameraBtn.textContent = 'Stop Camera';
-        startCameraBtn.onclick = stopCamera;
-        captureBtn.disabled = false;
+        videoFeed.srcObject = cameraStream;
+        startCamBtn.textContent = 'Stop Camera';
+        capturePhotoBtn.disabled = false;
+        cameraActive = true;
+        
     } catch (err) {
-        alert('Could not access camera: ' + err.message);
+        alert('Camera access denied: ' + err.message);
     }
 }
 
-function stopCamera() {
-    if (stream) {
-        stream.getTracks().forEach(track => track.stop());
-        stream = null;
+// Stop camera stream
+function stopCameraStream() {
+    if (cameraStream) {
+        cameraStream.getTracks().forEach(function(track) { 
+            track.stop(); 
+        });
+        cameraStream = null;
     }
-    cameraFeed.srcObject = null;
-    startCameraBtn.textContent = 'Start Camera';
-    startCameraBtn.onclick = startCamera;
-    captureBtn.disabled = true;
+    videoFeed.srcObject = null;
+    startCamBtn.textContent = 'Start Camera';
+    capturePhotoBtn.disabled = true;
+    cameraActive = false;
 }
 
-async function switchCamera() {
-    facingMode = facingMode === 'environment' ? 'user' : 'environment';
-    if (stream) await startCamera();
+// Switch between front and back camera
+async function flipCamera() {
+    cameraDirection = (cameraDirection === 'environment') ? 'user' : 'environment';
+    if (cameraStream) {
+        await initializeCamera();
+    }
 }
 
-function captureImage() {
-    cameraCanvas.width = cameraFeed.videoWidth;
-    cameraCanvas.height = cameraFeed.videoHeight;
-    const ctx = cameraCanvas.getContext('2d');
-    ctx.drawImage(cameraFeed, 0, 0);
+// Capture photo from video feed
+function takePhoto() {
+    captureCanvas.width = videoFeed.videoWidth;
+    captureCanvas.height = videoFeed.videoHeight;
     
-    currentImageData = cameraCanvas.toDataURL('image/jpeg', 0.9);
-    previewImage.src = currentImageData;
-    previewSection.style.display = 'block';
+    var ctx = captureCanvas.getContext('2d');
+    ctx.drawImage(videoFeed, 0, 0);
+    
+    selectedImageData = captureCanvas.toDataURL('image/jpeg', 0.9);
+    previewImg.src = selectedImageData;
+    previewContainer.style.display = 'block';
     document.getElementById('resultCard').style.display = 'none';
 }
 
-// Analysis
-const analyzeBtn = document.getElementById('analyzeBtn');
-const loadingOverlay = document.getElementById('loadingOverlay');
-const resultCard = document.getElementById('resultCard');
+// Analysis elements
+var analyzeButton = document.getElementById('analyzeBtn');
+var loadingScreen = document.getElementById('loadingOverlay');
+var resultsCard = document.getElementById('resultCard');
 
-analyzeBtn.addEventListener('click', analyzeImage);
+analyzeButton.addEventListener('click', runAnalysis);
 
-async function analyzeImage() {
-    if (!currentImageData) {
-        alert('Please select or capture an image first');
+// Send image to API for analysis
+async function runAnalysis() {
+    if (!selectedImageData) {
+        alert('Please upload or capture an image first');
         return;
     }
     
-    loadingOverlay.style.display = 'flex';
+    loadingScreen.style.display = 'flex';
     
     try {
-        const response = await fetch('/api/predict', {
+        var response = await fetch('/api/predict', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ image: currentImageData })
+            body: JSON.stringify({ image: selectedImageData })
         });
         
-        if (!response.ok) throw new Error('Analysis failed');
+        if (!response.ok) {
+            throw new Error('Analysis request failed');
+        }
         
-        const result = await response.json();
-        displayResult(result);
+        var analysisResult = await response.json();
+        showResults(analysisResult);
+        
     } catch (err) {
-        alert('Error analyzing image: ' + err.message);
+        alert('Analysis error: ' + err.message);
     } finally {
-        loadingOverlay.style.display = 'none';
+        loadingScreen.style.display = 'none';
     }
 }
 
-function displayResult(result) {
-    resultCard.style.display = 'block';
+// Display analysis results
+function showResults(result) {
+    resultsCard.style.display = 'block';
     
-    const statusEl = document.getElementById('resultStatus');
-    const confidenceFill = document.getElementById('confidenceFill');
-    const confidenceValue = document.getElementById('confidenceValue');
-    const detailsEl = document.getElementById('resultDetails');
+    var statusDisplay = document.getElementById('resultStatus');
+    var detailsSection = document.getElementById('resultDetails');
     
-    const isHealthy = result.prediction === 'healthy';
-    const confidence = Math.round(result.confidence * 100);
+    var plantHealthy = result.prediction === 'healthy';
     
-    statusEl.className = 'result-status ' + (isHealthy ? 'healthy' : 'diseased');
-    statusEl.innerHTML = isHealthy 
-        ? '✅ Healthy Plant' 
-        : '⚠️ Disease Detected';
+    // Update status display
+    statusDisplay.className = 'result-status ' + (plantHealthy ? 'healthy' : 'diseased');
+    statusDisplay.innerHTML = plantHealthy 
+        ? 'Healthy Plant' 
+        : 'Disease Detected';
     
-    confidenceFill.style.width = confidence + '%';
-    confidenceValue.textContent = confidence + '%';
+    // Show appropriate recommendations
+    if (plantHealthy) {
+        detailsSection.innerHTML = '<h4>Good News!</h4>' +
+            '<p>Your plant looks healthy. Keep up the good care and continue monitoring regularly.</p>';
+    } else {
+        detailsSection.innerHTML = '<h4>Recommended Fertilizers</h4>' +
+            '<div class="fertilizer-recommendations">' +
+                '<div class="fertilizer-item">' +
+                    '<strong>NPK 20-20-20</strong><br>' +
+                    '<span>Available at: Krishak Krishi Kendra, Nepal Fertilizer Suppliers</span>' +
+                '</div>' +
+                '<div class="fertilizer-item">' +
+                    '<strong>Urea (46-0-0)</strong><br>' +
+                    '<span>Available at: Shree Ganesh Agro Center, Himalayan Agro Traders</span>' +
+                '</div>' +
+                '<div class="fertilizer-item">' +
+                    '<strong>DAP (18-46-0)</strong><br>' +
+                    '<span>Available at: Green Valley Fertilizers, Siddhartha Krishi Sewa</span>' +
+                '</div>' +
+            '</div>' +
+            '<h4>Preventive Measures</h4>' +
+            '<ul class="preventive-measures">' +
+                '<li>Isolate infected plants from healthy ones immediately</li>' +
+                '<li>Remove and destroy infected leaves and plant parts</li>' +
+                '<li>Apply fungicide (Mancozeb or Copper-based) as per instructions</li>' +
+                '<li>Ensure proper spacing between plants for air circulation</li>' +
+                '<li>Avoid overhead watering to reduce leaf wetness</li>' +
+                '<li>Practice crop rotation to prevent soil-borne diseases</li>' +
+                '<li>Use disease-resistant plant varieties when possible</li>' +
+                '<li>Maintain proper soil drainage to prevent root diseases</li>' +
+                '<li>Sanitize gardening tools after use on infected plants</li>' +
+                '<li>Consult a local agricultural expert if symptoms persist</li>' +
+            '</ul>';
+    }
     
-    detailsEl.innerHTML = isHealthy
-        ? `<h4>Great News!</h4><p>Your plant appears to be healthy. Continue with regular care and monitoring.</p>`
-        : `<h4>Recommendations</h4>
-           <p>• Isolate the affected plant from others<br>
-           • Remove infected leaves carefully<br>
-           • Consider using appropriate fungicide/pesticide<br>
-           • Ensure proper drainage and air circulation<br>
-           • Consult a local agricultural expert if condition persists</p>`;
-    
-    resultCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    // Scroll to results
+    resultsCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 
-// Menu functionality
-const menuToggle = document.getElementById('menuToggle');
-const sliderMenu = document.getElementById('sliderMenu');
-const sliderClose = document.getElementById('sliderClose');
-const sliderOverlay = document.getElementById('sliderOverlay');
+// Mobile menu functionality
+var menuBtn = document.getElementById('menuToggle');
+var sideMenu = document.getElementById('sliderMenu');
+var closeMenuBtn = document.getElementById('sliderClose');
+var menuOverlay = document.getElementById('sliderOverlay');
 
-menuToggle.addEventListener('click', () => {
-    sliderMenu.classList.add('active');
-    sliderOverlay.classList.add('active');
-});
+if (menuBtn) {
+    menuBtn.addEventListener('click', function() {
+        sideMenu.classList.add('active');
+        menuOverlay.classList.add('active');
+    });
+}
 
-sliderClose.addEventListener('click', closeMenu);
-sliderOverlay.addEventListener('click', closeMenu);
+if (closeMenuBtn) {
+    closeMenuBtn.addEventListener('click', closeSideMenu);
+}
 
-function closeMenu() {
-    sliderMenu.classList.remove('active');
-    sliderOverlay.classList.remove('active');
+if (menuOverlay) {
+    menuOverlay.addEventListener('click', closeSideMenu);
+}
+
+function closeSideMenu() {
+    sideMenu.classList.remove('active');
+    menuOverlay.classList.remove('active');
 }

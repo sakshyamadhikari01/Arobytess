@@ -13,6 +13,7 @@
             min-height: 100vh;
             background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 50%, var(--primary-light) 100%);
         }
+        
         .page-header {
             background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 50%, var(--primary-light) 100%);
             padding: 100px 20px 60px;
@@ -21,6 +22,7 @@
             position: relative;
             overflow: hidden;
         }
+        
         .page-header::before {
             content: '';
             position: absolute;
@@ -28,10 +30,19 @@
             background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="rgba(255,255,255,0.1)"/></svg>') repeat;
             background-size: 50px 50px;
         }
+        
         .page-header-content { position: relative; z-index: 1; }
         .page-header h1 { font-family: 'Amarna', sans-serif; font-size: 2.5rem; margin-bottom: 10px; }
         .page-header p { opacity: 0.9; color: var(--secondary); }
-        .header-flower { position: absolute; width: 150px; height: auto; opacity: 1; z-index: 10; pointer-events: none; }
+        
+        .header-flower {
+            position: absolute;
+            width: 150px;
+            height: auto;
+            opacity: 1;
+            z-index: 10;
+            pointer-events: none;
+        }
         .header-flower-left { bottom: 10px; left: 20px; transform: rotate(-15deg); }
         .header-flower-right { top: 80px; right: 20px; transform: rotate(15deg) scaleX(-1); }
         
@@ -47,18 +58,11 @@
             border: 1px solid rgba(255,255,255,0.2);
         }
         
-        .form-group {
-            margin-bottom: 20px;
-        }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; color: var(--white); margin-bottom: 8px; font-weight: 500; }
         
-        .form-group label {
-            display: block;
-            color: var(--white);
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-        
-        .form-group input, .form-group select {
+        .form-group input,
+        .form-group select {
             width: 100%;
             padding: 12px 15px;
             border: 1px solid rgba(255,255,255,0.3);
@@ -68,21 +72,49 @@
             font-size: 16px;
         }
         
-        .form-group input::placeholder {
-            color: rgba(255,255,255,0.6);
-        }
+        .form-group input::placeholder { color: rgba(255,255,255,0.6); }
         
-        .form-group input:focus, .form-group select:focus {
+        .form-group input:focus,
+        .form-group select:focus {
             outline: none;
             border-color: var(--secondary);
             box-shadow: 0 0 0 2px rgba(255,193,7,0.2);
         }
         
-        .alert-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; margin-top: 20px; }
-        .alert-card { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border-radius: 12px; padding: 25px; border: 1px solid rgba(255,255,255,0.2); transition: transform 0.3s, box-shadow 0.3s; }
-        .alert-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.15); }
-        .alert-card h3 { color: var(--white); margin-bottom: 12px; font-size: 1.2rem; font-family: 'Amarna', sans-serif; }
-        .alert-card p { color: rgba(255,255,255,0.8); font-size: 0.9rem; margin-bottom: 15px; line-height: 1.6; }
+        .alert-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .alert-card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 25px;
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .alert-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        
+        .alert-card h3 {
+            color: var(--white);
+            margin-bottom: 12px;
+            font-size: 1.2rem;
+            font-family: 'Amarna', sans-serif;
+        }
+        
+        .alert-card p {
+            color: rgba(255,255,255,0.8);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
         
         .alert-status {
             display: inline-block;
@@ -117,43 +149,11 @@
         
         .alert-item:last-child { margin-bottom: 0; }
         
-        .alert-info h4 {
-            color: var(--white);
-            margin: 0 0 5px 0;
-            font-size: 1rem;
-        }
+        .alert-info h4 { color: var(--white); margin: 0 0 5px 0; font-size: 1rem; }
+        .alert-info p { color: rgba(255,255,255,0.7); margin: 0; font-size: 0.9rem; }
+        .alert-time { color: var(--secondary); font-size: 0.8rem; font-weight: 500; }
         
-        .alert-info p {
-            color: rgba(255,255,255,0.7);
-            margin: 0;
-            font-size: 0.9rem;
-        }
-        
-        .alert-time {
-            color: var(--secondary);
-            font-size: 0.8rem;
-            font-weight: 500;
-        }
-        
-        @media (max-width: 768px) {
-            .alert-page { padding-top: 60px; }
-            .page-header { padding: 80px 15px 40px; }
-            .page-header h1 { font-size: 1.8rem; }
-            .header-flower { display: none; }
-            .alert-section { padding: 25px 15px; }
-            .alert-grid { grid-template-columns: 1fr; gap: 15px; }
-            .alert-form-container { padding: 20px; }
-        }
-        @media (max-width: 480px) {
-            .alert-page { padding-top: 55px; }
-            .page-header { padding: 70px 15px 30px; }
-            .page-header h1 { font-size: 1.5rem; }
-            .alert-section { padding: 20px 12px; }
-            .alert-card { padding: 20px; }
-            .alert-item { flex-direction: column; align-items: flex-start; gap: 10px; }
-        }
-        
-        /* Modal Styles */
+        /* Modal styles */
         .modal {
             position: fixed;
             z-index: 1000;
@@ -185,11 +185,7 @@
             border-bottom: 1px solid rgba(255,255,255,0.2);
         }
         
-        .modal-header h3 {
-            color: var(--white);
-            margin: 0;
-            font-family: 'Amarna', sans-serif;
-        }
+        .modal-header h3 { color: var(--white); margin: 0; font-family: 'Amarna', sans-serif; }
         
         .close {
             color: var(--white);
@@ -199,13 +195,9 @@
             line-height: 1;
         }
         
-        .close:hover {
-            color: var(--secondary);
-        }
+        .close:hover { color: var(--secondary); }
         
-        .modal form {
-            padding: 25px;
-        }
+        .modal form { padding: 25px; }
         
         .modal textarea {
             width: 100%;
@@ -219,18 +211,36 @@
             resize: vertical;
         }
         
-        .modal textarea::placeholder {
-            color: rgba(255,255,255,0.6);
-        }
+        .modal textarea::placeholder { color: rgba(255,255,255,0.6); }
         
         .modal textarea:focus {
             outline: none;
             border-color: var(--secondary);
             box-shadow: 0 0 0 2px rgba(255,193,7,0.2);
         }
+        
+        @media (max-width: 768px) {
+            .alert-page { padding-top: 60px; }
+            .page-header { padding: 80px 15px 40px; }
+            .page-header h1 { font-size: 1.8rem; }
+            .header-flower { display: none; }
+            .alert-section { padding: 25px 15px; }
+            .alert-grid { grid-template-columns: 1fr; gap: 15px; }
+            .alert-form-container { padding: 20px; }
+        }
+        
+        @media (max-width: 480px) {
+            .alert-page { padding-top: 55px; }
+            .page-header { padding: 70px 15px 30px; }
+            .page-header h1 { font-size: 1.5rem; }
+            .alert-section { padding: 20px 12px; }
+            .alert-card { padding: 20px; }
+            .alert-item { flex-direction: column; align-items: flex-start; gap: 10px; }
+        }
     </style>
 </head>
 <body>
+    <!-- Mobile menu -->
     <div class="slider-menu" id="sliderMenu">
         <div class="slider-header">
             <span class="slider-title">Menu</span>
@@ -238,7 +248,7 @@
         </div>
         <ul class="slider-nav">
             <li><a href="home.html">Home</a></li>
-            <li><a href="#">AI Detection</a></li>
+            <li><a href="ai-detection.html">AI Detection</a></li>
             <li><a href="fertilizers.html">Find Fertilizers</a></li>
             <li><a href="blogs.html">Agro Blogs</a></li>
             <li><a href="community.html">Disease Alerts</a></li>
@@ -249,16 +259,20 @@
     <div class="slider-overlay" id="sliderOverlay"></div>
     <button class="menu-toggle" id="menuToggle">☰</button>
 
+    <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
-            <a href="home.html" class="logo"><img src="/static/images/groot.png" alt="Gaun Roots Logo" class="logo-img">Gaun Roots</a>
+            <a href="home.html" class="logo">
+                <img src="/static/images/groot.png" alt="Gaun Roots Logo" class="logo-img">
+                Gaun Roots
+            </a>
             <button class="nav-toggle" id="navToggle">☰</button>
             <ul class="nav-menu" id="navMenu">
                 <li><a href="home.html" class="nav-link">Home</a></li>
-                <li><a href="#" class="nav-link">AI Detection</a></li>
+                <li><a href="ai-detection.html" class="nav-link">AI Detection</a></li>
                 <li><a href="fertilizers.html" class="nav-link">Find Fertilizers</a></li>
                 <li><a href="blogs.html" class="nav-link">Agro Blogs</a></li>
-                <li><a href="community.html" class="nav-link active">Disease Alerts</a></li>
+                <li><a href="community.html" class="nav-link active">Community</a></li>
                 <li><a href="profile.html" class="nav-link">Profile</a></li>
                 <li><a href="login.html" class="nav-link">Login</a></li>
             </ul>
@@ -266,23 +280,27 @@
     </nav>
 
     <div class="alert-page">
+        <!-- Header -->
         <div class="page-header">
             <img src="/static/images/grey.png" alt="" class="header-flower header-flower-left">
             <img src="/static/images/grey.png" alt="" class="header-flower header-flower-right">
             <div class="page-header-content">
                 <h1>Disease Alert System</h1>
-                <p>Stay informed about crop diseases in Kathmandu Valley via SMS</p>
-                <small style="color: var(--secondary); font-weight: 500;">📍 Auto-location enabled for quick demo</small>
+                <p>Get SMS alerts when diseases pop up near you</p>
+                <small style="color: var(--secondary); font-weight: 500;">Auto-location enabled for quick demo</small>
             </div>
         </div>
 
         <div class="alert-section">
-            <h2 class="section-title">Alert Registration</h2>
-            <p style="color: rgba(255,255,255,0.8); margin-bottom: 15px;">Register to receive instant SMS notifications when diseases are detected near your location</p>
+            <!-- Registration section -->
+            <h2 class="section-title">Sign Up for Alerts</h2>
+            <p style="color: rgba(255,255,255,0.8); margin-bottom: 15px;">We'll text you when something's spreading in your area</p>
+            
             <div style="background: rgba(255,193,7,0.1); border: 1px solid rgba(255,193,7,0.3); border-radius: 8px; padding: 12px; margin-bottom: 20px;">
-                <p style="color: var(--secondary); margin: 0; font-size: 0.9rem;">🚀 <strong>Demo Mode:</strong> Location is auto-detected as "Kathmandu Valley" for hackathon demonstration</p>
+                <p style="color: var(--secondary); margin: 0; font-size: 0.9rem;"><strong>Demo Mode:</strong> Location is auto-detected as "Kathmandu Valley" for hackathon demonstration</p>
             </div>
 
+            <!-- Registration form -->
             <div class="alert-form-container">
                 <form id="alertRegistrationForm">
                     <div class="form-group">
@@ -296,7 +314,7 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="autoLocation">📍 Location (Auto-detected)</label>
+                        <label for="autoLocation">Location (Auto-detected)</label>
                         <input type="text" id="autoLocation" name="autoLocation" value="Kathmandu Valley" readonly style="background: rgba(255,255,255,0.05); cursor: not-allowed;">
                         <small style="color: rgba(255,255,255,0.7); font-size: 0.8rem; margin-top: 5px; display: block;">Location is automatically detected for demo purposes</small>
                     </div>
@@ -332,68 +350,70 @@
                 </form>
             </div>
 
-            <h2 class="section-title">Alert Features</h2>
+            <!-- Features section -->
+            <h2 class="section-title">How it works</h2>
             <div class="alert-grid">
                 <div class="alert-card">
                     <span class="alert-status status-active">Active</span>
-                    <h3>Instant Notifications</h3>
-                    <p>Receive immediate SMS alerts when diseases are detected in your area with detailed information and prevention tips.</p>
+                    <h3>Quick SMS Alerts</h3>
+                    <p>We'll send you a text as soon as we hear about diseases nearby. No app needed.</p>
                 </div>
 
                 <div class="alert-card">
                     <span class="alert-status status-active">Active</span>
-                    <h3>Location-Based Alerts</h3>
-                    <p>Get notifications only for diseases detected within your specified radius, ensuring relevant and actionable information.</p>
+                    <h3>Your Area Only</h3>
+                    <p>You pick how far - 5km, 10km, whatever. We only bug you about stuff that actually matters to your farm.</p>
                 </div>
 
                 <div class="alert-card">
                     <span class="alert-status status-active">Active</span>
-                    <h3>Crop-Specific Warnings</h3>
-                    <p>Receive alerts tailored to your specific crops, helping you take targeted preventive measures quickly.</p>
+                    <h3>Filtered by Your Crops</h3>
+                    <p>Growing tomatoes? You won't get spammed about rice diseases. Simple as that.</p>
                 </div>
 
                 <div class="alert-card">
                     <span class="alert-status status-warning">Beta</span>
-                    <h3>Treatment Recommendations</h3>
-                    <p>Get expert-recommended treatment options and nearby supplier information along with disease alerts.</p>
+                    <h3>Treatment Tips</h3>
+                    <p>Still working on this one - but we're adding suggestions for what to do when you get an alert.</p>
                 </div>
 
                 <div class="alert-card">
                     <span class="alert-status status-warning">Coming Soon</span>
-                    <h3>Weather Integration</h3>
-                    <p>Receive proactive alerts based on weather conditions that favor disease development in your crops.</p>
+                    <h3>Weather Warnings</h3>
+                    <p>Rainy season = disease season. We're building something to warn you before problems start.</p>
                 </div>
 
                 <div class="alert-card">
                     <span class="alert-status status-active">Active</span>
-                    <h3>Community Reports</h3>
-                    <p>Report disease outbreaks in your area to help alert other farmers and build a community-driven early warning system.</p>
-                    <button class="btn btn-primary" onclick="showReportForm()" style="width: 100%; margin-top: 10px;">
+                    <h3>Help Each Other Out</h3>
+                    <p>Spotted something weird on your plants? Report it and help your neighbors catch it early too.</p>
+                    <button class="btn btn-primary" onclick="openReportModal()" style="width: 100%; margin-top: 10px;">
                         Report Disease
                     </button>
                 </div>
             </div>
 
+            <!-- Recent alerts -->
             <div class="recent-alerts">
-                <h3 style="color: var(--white); margin-bottom: 20px;">Recent Alerts in Kathmandu Valley</h3>
+                <h3 style="color: var(--white); margin-bottom: 20px;">What's been reported lately</h3>
                 <div class="alert-item">
                     <div class="alert-info">
-                        <h4>Late Blight in Potato Crops</h4>
-                        <p>Detected in Kathmandu Valley - Immediate fungicide treatment recommended</p>
+                        <h4>Late Blight on Potatoes</h4>
+                        <p>Kathmandu Valley - might want to spray fungicide soon</p>
                     </div>
                     <div class="alert-time">2 hours ago</div>
                 </div>
                 <div class="alert-item">
                     <div class="alert-info">
-                        <h4>Bacterial Wilt in Tomatoes</h4>
-                        <p>Reported in Kathmandu Valley - Check soil drainage and avoid overwatering</p>
+                        <h4>Tomato Wilt</h4>
+                        <p>Kathmandu Valley - check your drainage, don't overwater</p>
                     </div>
                     <div class="alert-time">1 day ago</div>
                 </div>
                 <div class="alert-item">
                     <div class="alert-info">
-                        <h4>Blast Disease in Rice</h4>
-                        <p>Outbreak in Kathmandu Valley - Apply recommended fungicides immediately</p>
+                        <h4>Rice Blast</h4>
+                        <p>Kathmandu Valley - spreading fast, treat asap</p>
                     </div>
                     <div class="alert-time">3 days ago</div>
                 </div>
@@ -406,7 +426,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3>Report Disease Outbreak</h3>
-                <span class="close" onclick="hideReportForm()">&times;</span>
+                <span class="close" onclick="closeReportModal()">&times;</span>
             </div>
             <form id="diseaseReportForm">
                 <div class="form-group">
@@ -415,7 +435,7 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="autoReportLocation">📍 Location (Auto-detected)</label>
+                    <label for="autoReportLocation">Location (Auto-detected)</label>
                     <input type="text" id="autoReportLocation" name="autoReportLocation" value="Kathmandu Valley" readonly style="background: rgba(255,255,255,0.05); cursor: not-allowed;">
                     <small style="color: rgba(255,255,255,0.7); font-size: 0.8rem; margin-top: 5px; display: block;">Location is automatically detected for demo purposes</small>
                 </div>
@@ -462,12 +482,13 @@
         </div>
     </div>
 
+    <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
                 <div class="footer-brand">
                     <h3>Gaun Roots</h3>
-                    <p>Empowering rural agriculture through technology and community</p>
+                    <p>Made with love in Nepal</p>
                 </div>
                 <div class="footer-social">
                     <h4>Follow Us</h4>
@@ -488,111 +509,112 @@
     <script src="/static/js/auth.js"></script>
     <script src="/static/js/alerts.js"></script>
     <script>
-        var navToggle = document.getElementById('navToggle');
-        var navMenu = document.getElementById('navMenu');
-        navToggle.addEventListener('click', function() {
-            navMenu.classList.toggle('active');
-        });
+    // Navigation toggle
+    var navToggle = document.getElementById('navToggle');
+    var navMenu = document.getElementById('navMenu');
+    navToggle.addEventListener('click', function() {
+        navMenu.classList.toggle('active');
+    });
 
-        var menuToggle = document.getElementById('menuToggle');
-        var sliderMenu = document.getElementById('sliderMenu');
-        var sliderClose = document.getElementById('sliderClose');
-        var sliderOverlay = document.getElementById('sliderOverlay');
+    // Slider menu controls
+    var menuToggle = document.getElementById('menuToggle');
+    var sliderMenu = document.getElementById('sliderMenu');
+    var sliderClose = document.getElementById('sliderClose');
+    var sliderOverlay = document.getElementById('sliderOverlay');
 
-        menuToggle.addEventListener('click', function() {
-            sliderMenu.classList.add('active');
-            sliderOverlay.classList.add('active');
-        });
-        sliderClose.addEventListener('click', function() {
-            sliderMenu.classList.remove('active');
-            sliderOverlay.classList.remove('active');
-        });
-        sliderOverlay.addEventListener('click', function() {
-            sliderMenu.classList.remove('active');
-            sliderOverlay.classList.remove('active');
-        });
+    menuToggle.addEventListener('click', function() {
+        sliderMenu.classList.add('active');
+        sliderOverlay.classList.add('active');
+    });
+    
+    sliderClose.addEventListener('click', function() {
+        sliderMenu.classList.remove('active');
+        sliderOverlay.classList.remove('active');
+    });
+    
+    sliderOverlay.addEventListener('click', function() {
+        sliderMenu.classList.remove('active');
+        sliderOverlay.classList.remove('active');
+    });
 
-        window.addEventListener('scroll', function() {
-            var navbar = document.querySelector('.navbar');
-            if(window.scrollY > 50) {
-                navbar.classList.add('scrolled');
+    // Navbar scroll effect
+    window.addEventListener('scroll', function() {
+        var navbar = document.querySelector('.navbar');
+        if (window.scrollY > 50) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+    });
+
+    // Registration form handler
+    document.getElementById('alertRegistrationForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        var formData = {
+            farmerName: document.getElementById('farmerName').value,
+            phoneNumber: document.getElementById('phoneNumber').value,
+            cropTypes: document.getElementById('cropTypes').value,
+            alertRadius: document.getElementById('alertRadius').value
+        };
+
+        // Validate phone
+        var phonePattern = /^\+?[0-9]{10,15}$/;
+        if (!phonePattern.test(formData.phoneNumber.replace(/[-\s]/g, ''))) {
+            alert('Please enter a valid phone number');
+            return;
+        }
+
+        // Submit to API
+        fetch('/api/register-alerts', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formData)
+        })
+        .then(function(response) { return response.json(); })
+        .then(function(data) {
+            if (data.success) {
+                alert('Successfully registered for disease alerts! Location auto-detected as Kathmandu Valley. You will receive SMS notifications when diseases are detected in your area.');
+                document.getElementById('alertRegistrationForm').reset();
+                document.getElementById('autoLocation').value = 'Kathmandu Valley';
             } else {
-                navbar.classList.remove('scrolled');
+                alert('Registration failed: ' + (data.message || 'Please try again'));
             }
+        })
+        .catch(function(error) {
+            console.error('Error:', error);
+            alert('Registration failed. Please check your connection and try again.');
         });
+    });
 
-        // Alert Registration Form Handler
-        document.getElementById('alertRegistrationForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const formData = {
-                farmerName: document.getElementById('farmerName').value,
-                phoneNumber: document.getElementById('phoneNumber').value,
-                cropTypes: document.getElementById('cropTypes').value,
-                alertRadius: document.getElementById('alertRadius').value
-            };
-
-            // Validate phone number format
-            const phoneRegex = /^\+?[0-9]{10,15}$/;
-            if (!phoneRegex.test(formData.phoneNumber.replace(/[-\s]/g, ''))) {
-                alert('Please enter a valid phone number');
-                return;
-            }
-
-            // Send registration data to backend
-            fetch('/api/register-alerts', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData)
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Successfully registered for disease alerts! Location auto-detected as Kathmandu Valley. You will receive SMS notifications when diseases are detected in your area.');
-                    document.getElementById('alertRegistrationForm').reset();
-                    // Reset auto-location field
-                    document.getElementById('autoLocation').value = 'Kathmandu Valley';
-                } else {
-                    alert('Registration failed: ' + (data.message || 'Please try again'));
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Registration failed. Please check your connection and try again.');
-            });
-        });
-
-        // Load user's existing alert preferences if logged in
-        window.addEventListener('load', function() {
-            const user = JSON.parse(localStorage.getItem('user') || '{}');
-            if (user.phone) {
-                document.getElementById('phoneNumber').value = user.phone;
-            }
-            // Auto-location is always set to Kathmandu Valley for demo
-            document.getElementById('autoLocation').value = 'Kathmandu Valley';
-            document.getElementById('autoReportLocation').value = 'Kathmandu Valley';
-        });
-
-        // Modal functions
-        function showReportForm() {
-            document.getElementById('reportModal').style.display = 'block';
-            document.body.style.overflow = 'hidden';
+    // Load user preferences on page load
+    window.addEventListener('load', function() {
+        var user = JSON.parse(localStorage.getItem('user') || '{}');
+        if (user.phone) {
+            document.getElementById('phoneNumber').value = user.phone;
         }
+        document.getElementById('autoLocation').value = 'Kathmandu Valley';
+        document.getElementById('autoReportLocation').value = 'Kathmandu Valley';
+    });
 
-        function hideReportForm() {
-            document.getElementById('reportModal').style.display = 'none';
-            document.body.style.overflow = 'auto';
+    // Modal functions
+    function openReportModal() {
+        document.getElementById('reportModal').style.display = 'block';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeReportModal() {
+        document.getElementById('reportModal').style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+
+    // Close modal on outside click
+    window.addEventListener('click', function(event) {
+        var modal = document.getElementById('reportModal');
+        if (event.target === modal) {
+            closeReportModal();
         }
-
-        // Close modal when clicking outside
-        window.addEventListener('click', function(event) {
-            const modal = document.getElementById('reportModal');
-            if (event.target === modal) {
-                hideReportForm();
-            }
-        });
+    });
     </script>
 </body>
 </html>

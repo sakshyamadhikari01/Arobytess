@@ -1,38 +1,50 @@
+/*
+ * Authentication and Navigation Handler
+ * Updates navigation links based on user login state
+ */
+
 function updateNavigation() {
-    var currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    var isLoggedIn = !!currentUser;
+    // Get current user from storage
+    var user = JSON.parse(localStorage.getItem('currentUser'));
+    var loggedIn = user !== null;
     
-    var profileUrl = 'profile.html';
-    if (currentUser && currentUser.type === 'seller') {
-        profileUrl = 'seller-profile.html';
+    // Determine correct profile page based on user type
+    var profilePage = 'profile.html';
+    if (user && user.type === 'seller') {
+        profilePage = 'seller-profile.html';
     }
 
-    var navMenus = [
+    // Find all navigation menus on the page
+    var navContainers = [
         document.getElementById('navMenu'),
         document.querySelector('.slider-nav'),
         document.querySelector('.fullpage-nav')
     ];
 
-    navMenus.forEach(function(menu) {
-        if (!menu) return;
+    // Update each navigation menu
+    navContainers.forEach(function(nav) {
+        if (!nav) return;
         
-        var links = menu.querySelectorAll('a');
+        var links = nav.querySelectorAll('a');
+        
         links.forEach(function(link) {
             var href = link.getAttribute('href');
-            var text = link.textContent.trim().toLowerCase();
+            var linkText = link.textContent.trim().toLowerCase();
             
-            if (href === 'profile.html' || href === 'seller-profile.html' || text === 'profile') {
-                if (isLoggedIn) {
-                    link.setAttribute('href', profileUrl);
-                    link.textContent = currentUser.name;
+            // Update profile links
+            if (href === 'profile.html' || href === 'seller-profile.html' || linkText === 'profile') {
+                if (loggedIn) {
+                    link.setAttribute('href', profilePage);
+                    link.textContent = user.name;
                 } else {
                     link.setAttribute('href', 'profile.html');
                     link.textContent = 'Profile';
                 }
             }
             
-            if (href === 'login.html' || text === 'login' || text === 'logout') {
-                if (isLoggedIn) {
+            // Update login/logout links
+            if (href === 'login.html' || linkText === 'login' || linkText === 'logout') {
+                if (loggedIn) {
                     link.textContent = 'Logout';
                     link.setAttribute('href', '#');
                     link.onclick = function(e) {
@@ -49,14 +61,16 @@ function updateNavigation() {
         });
     });
 
-    var getStartedBtn = document.getElementById('getStartedBtn');
-    if (getStartedBtn && isLoggedIn) {
-        getStartedBtn.textContent = 'Go to Dashboard';
-        getStartedBtn.onclick = function(e) {
+    // Update "Get Started" button on home page
+    var startBtn = document.getElementById('getStartedBtn');
+    if (startBtn && loggedIn) {
+        startBtn.textContent = 'Go to Dashboard';
+        startBtn.onclick = function(e) {
             e.preventDefault();
-            window.location.href = profileUrl;
+            window.location.href = profilePage;
         };
     }
 }
 
+// Run when page loads
 document.addEventListener('DOMContentLoaded', updateNavigation);
