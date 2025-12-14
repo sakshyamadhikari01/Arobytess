@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Gaun Roots</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="profile.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Amarna:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="home.html" class="logo"><img src="images/groot.png" alt="Gaun Roots Logo" class="logo-img">Gaun Roots</a>
+            <ul class="nav-menu">
+                <li><a href="home.html" class="nav-link">Home</a></li>
+                <li><a href="#" class="nav-link">AI Detection</a></li>
+                <li><a href="fertilizers.html" class="nav-link">Find Fertilizers</a></li>
+                <li><a href="blogs.html" class="nav-link">Agro Blogs</a></li>
+                <li><a href="profile.html" class="nav-link active">Profile</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="profile-container">
+        <div class="profile-card">
+            <div class="profile-header">
+                <div class="profile-avatar" id="profileAvatar">
+                    <span id="avatarInitial">?</span>
+                </div>
+                <h1 id="profileName">Guest User</h1>
+                <span class="user-badge" id="userBadge">Farmer</span>
+            </div>
+
+            <div class="profile-stats">
+                <div class="stat-box">
+                    <span class="stat-value" id="creditsCount">0</span>
+                    <span class="stat-label">Credits</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-value" id="friendsCount">0</span>
+                    <span class="stat-label">Friends</span>
+                </div>
+            </div>
+
+            <div class="profile-actions">
+                <button class="btn btn-primary" id="addCreditsBtn">+ Add Credits</button>
+                <button class="btn btn-outline-dark" id="addFriendBtn">+ Add Friend</button>
+            </div>
+
+            <div class="profile-section">
+                <h3>Friends List</h3>
+                <div class="friends-list" id="friendsList">
+                    <p class="empty-message">No friends added yet</p>
+                </div>
+            </div>
+
+            <div class="profile-footer">
+                <button class="btn btn-logout" id="logoutBtn">Logout</button>
+            </div>
+        </div>
+
+        <!-- Add Friend Modal -->
+        <div class="modal" id="addFriendModal">
+            <div class="modal-content">
+                <button class="modal-close" id="friendModalClose">✕</button>
+                <h2>Add Friend</h2>
+                <form id="addFriendForm">
+                    <div class="form-group">
+                        <label for="friendName">Friend's Name</label>
+                        <input type="text" id="friendName" placeholder="Enter friend's name" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Friend</button>
+                </form>
+            </div>
+        </div>
+        <div class="modal-overlay" id="modalOverlay"></div>
+    </div>
+
+    <script>
+        // Check if user is logged in
+        var currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        
+        if (!currentUser) {
+            window.location.href = 'login.html';
+        } else {
+            // Load user data
+            document.getElementById('profileName').textContent = currentUser.name;
+            document.getElementById('avatarInitial').textContent = currentUser.name.charAt(0).toUpperCase();
+            document.getElementById('userBadge').textContent = currentUser.type === 'vet' ? 'Veterinarian' : 'Farmer';
+            document.getElementById('userBadge').className = 'user-badge ' + currentUser.type;
+
+            // Load credits and friends
+            var credits = currentUser.credits || 0;
+            var friends = currentUser.friends || [];
+            
+            document.getElementById('creditsCount').textContent = credits;
+            document.getElementById('friendsCount').textContent = friends.length;
+
+            // Render friends list
+            renderFriends(friends);
+        }
+
+        function renderFriends(friends) {
+            var friendsList = document.getElementById('friendsList');
+            if (friends.length === 0) {
+                friendsList.innerHTML = '<p class="empty-message">No friends added yet</p>';
+            } else {
+                friendsList.innerHTML = friends.map(function(friend) {
+                    return '<div class="friend-item"><span class="friend-avatar">' + friend.charAt(0).toUpperCase() + '</span><span class="friend-name">' + friend + '</span></div>';
+                }).join('');
+            }
+        }
+
+        function updateUserData() {
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            // Also update in users array
+            var users = JSON.parse(localStorage.getItem('gaunRootsUsers') || '[]');
+            var index = users.findIndex(function(u) { return u.id === currentUser.id; });
+            if (index !== -1) {
+                users[index] = currentUser;
+                localStorage.setItem('gaunRootsUsers', JSON.stringify(users));
+            }
+        }
+
+        // Add Credits
+        document.getElementById('addCreditsBtn').addEventListener('click', function() {
+            var amount = prompt('How many credits to add?', '10');
+            if (amount && !isNaN(amount) && parseInt(amount) > 0) {
+                currentUser.credits = (currentUser.credits || 0) + parseInt(amount);
+                document.getElementById('creditsCount').textContent = currentUser.credits;
+                updateUserData();
+            }
+        });
+
+        // Add Friend Modal
+        var addFriendModal = document.getElementById('addFriendModal');
+        var modalOverlay = document.getElementById('modalOverlay');
+        var friendModalClose = document.getElementById('friendModalClose');
+
+        document.getElementById('addFriendBtn').addEventListener('click', function() {
+            addFriendModal.classList.add('active');
+            modalOverlay.classList.add('active');
+        });
+
+        function closeModal() {
+            addFriendModal.classList.remove('active');
+            modalOverlay.classList.remove('active');
+        }
+
+        friendModalClose.addEventListener('click', closeModal);
+        modalOverlay.addEventListener('click', closeModal);
+
+        // Add Friend Form
+        document.getElementById('addFriendForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            var friendName = document.getElementById('friendName').value.trim();
+            if (friendName) {
+                if (!currentUser.friends) currentUser.friends = [];
+                if (!currentUser.friends.includes(friendName)) {
+                    currentUser.friends.push(friendName);
+                    document.getElementById('friendsCount').textContent = currentUser.friends.length;
+                    renderFriends(currentUser.friends);
+                    updateUserData();
+                    document.getElementById('friendName').value = '';
+                    closeModal();
+                } else {
+                    alert('Friend already added!');
+                }
+            }
+        });
+
+        // Logout
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            localStorage.removeItem('currentUser');
+            window.location.href = 'login.html';
+        });
+    </script>
+</body>
+</html>

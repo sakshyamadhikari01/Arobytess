@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Gaun Roots</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="login.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Amarna:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <img src="images/groot.png" alt="Gaun Roots Logo" class="login-logo">
+                <h1>Gaun Roots</h1>
+                <p>Welcome back! Please login to continue</p>
+            </div>
+
+            <div class="user-type-tabs">
+                <button class="tab-btn active" data-type="farmer">Farmer</button>
+                <button class="tab-btn" data-type="vet">Vet</button>
+            </div>
+
+            <form id="loginForm" class="login-form">
+                <div class="form-group">
+                    <label for="userName">Your Name</label>
+                    <input type="text" id="userName" name="userName" placeholder="Enter your name" required>
+                </div>
+
+                <input type="hidden" id="userType" name="userType" value="farmer">
+
+                <button type="submit" class="btn btn-primary login-btn">Login</button>
+            </form>
+
+            <div class="login-footer">
+                <p>New to Gaun Roots? <a href="#" id="registerLink">Register here</a></p>
+                <a href="home.html" class="back-home">← Back to Home</a>
+            </div>
+        </div>
+
+        <!-- Registration Modal -->
+        <div class="modal" id="registerModal">
+            <div class="modal-content">
+                <button class="modal-close" id="modalClose">✕</button>
+                <h2>Create Account</h2>
+                <p>Join Gaun Roots community</p>
+
+                <div class="user-type-tabs">
+                    <button class="tab-btn active" data-type="farmer" id="regFarmerTab">Farmer</button>
+                    <button class="tab-btn" data-type="vet" id="regVetTab">Vet</button>
+                </div>
+
+                <form id="registerForm" class="login-form">
+                    <div class="form-group">
+                        <label for="regName">Your Name</label>
+                        <input type="text" id="regName" name="regName" placeholder="Enter your name" required>
+                    </div>
+
+                    <input type="hidden" id="regUserType" name="regUserType" value="farmer">
+
+                    <button type="submit" class="btn btn-primary login-btn">Register</button>
+                </form>
+            </div>
+        </div>
+        <div class="modal-overlay" id="modalOverlay"></div>
+    </div>
+
+    <script>
+        // Tab switching for login
+        var loginTabs = document.querySelectorAll('.login-card .tab-btn');
+        var userTypeInput = document.getElementById('userType');
+
+        loginTabs.forEach(function(tab) {
+            tab.addEventListener('click', function() {
+                loginTabs.forEach(function(t) { t.classList.remove('active'); });
+                this.classList.add('active');
+                userTypeInput.value = this.dataset.type;
+            });
+        });
+
+        // Tab switching for registration
+        var regFarmerTab = document.getElementById('regFarmerTab');
+        var regVetTab = document.getElementById('regVetTab');
+        var regUserTypeInput = document.getElementById('regUserType');
+
+        regFarmerTab.addEventListener('click', function() {
+            regFarmerTab.classList.add('active');
+            regVetTab.classList.remove('active');
+            regUserTypeInput.value = 'farmer';
+        });
+
+        regVetTab.addEventListener('click', function() {
+            regVetTab.classList.add('active');
+            regFarmerTab.classList.remove('active');
+            regUserTypeInput.value = 'vet';
+        });
+
+        // Modal handling
+        var registerLink = document.getElementById('registerLink');
+        var registerModal = document.getElementById('registerModal');
+        var modalOverlay = document.getElementById('modalOverlay');
+        var modalClose = document.getElementById('modalClose');
+
+        registerLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            registerModal.classList.add('active');
+            modalOverlay.classList.add('active');
+        });
+
+        function closeModal() {
+            registerModal.classList.remove('active');
+            modalOverlay.classList.remove('active');
+        }
+
+        modalClose.addEventListener('click', closeModal);
+        modalOverlay.addEventListener('click', closeModal);
+
+        // Login form submission
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            var name = document.getElementById('userName').value.trim();
+            var type = document.getElementById('userType').value;
+
+            if (name) {
+                // Store user info in localStorage
+                var users = JSON.parse(localStorage.getItem('gaunRootsUsers') || '[]');
+                var existingUser = users.find(function(u) { 
+                    return u.name.toLowerCase() === name.toLowerCase() && u.type === type; 
+                });
+
+                if (existingUser) {
+                    localStorage.setItem('currentUser', JSON.stringify(existingUser));
+                    alert('Welcome back, ' + name + '!');
+                    window.location.href = 'home.html';
+                } else {
+                    alert('User not found. Please register first.');
+                }
+            }
+        });
+
+        // Registration form submission
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            var name = document.getElementById('regName').value.trim();
+            var type = document.getElementById('regUserType').value;
+
+            if (name) {
+                var users = JSON.parse(localStorage.getItem('gaunRootsUsers') || '[]');
+                var existingUser = users.find(function(u) { 
+                    return u.name.toLowerCase() === name.toLowerCase() && u.type === type; 
+                });
+
+                if (existingUser) {
+                    alert('User already exists. Please login instead.');
+                } else {
+                    var newUser = { name: name, type: type, id: Date.now() };
+                    users.push(newUser);
+                    localStorage.setItem('gaunRootsUsers', JSON.stringify(users));
+                    localStorage.setItem('currentUser', JSON.stringify(newUser));
+                    alert('Registration successful! Welcome, ' + name + '!');
+                    window.location.href = 'home.html';
+                }
+            }
+        });
+    </script>
+</body>
+</html>
