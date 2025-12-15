@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Disease Alert System - Gaun Roots</title>
+    <title>Disease Alerts - Gaun Roots</title>
     <link rel="stylesheet" href="/static/css/styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Amarna:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&display=swap" rel="stylesheet">
     <style>
         .alert-page {
             padding-top: 80px;
             min-height: 100vh;
-            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 50%, var(--primary-light) 100%);
+            background: var(--primary-dark);
         }
         
         .page-header {
-            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 50%, var(--primary-light) 100%);
-            padding: 100px 20px 60px;
+            background: var(--primary-dark);
+            padding: 90px 20px 50px;
             text-align: center;
             color: var(--white);
             position: relative;
@@ -26,13 +26,16 @@
         .page-header::before {
             content: '';
             position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="rgba(255,255,255,0.1)"/></svg>') repeat;
-            background-size: 50px 50px;
+            top: -40%;
+            right: -20%;
+            width: 70%;
+            height: 140%;
+            background: radial-gradient(ellipse, rgba(61, 107, 79, 0.35) 0%, transparent 65%);
+            pointer-events: none;
         }
         
         .page-header-content { position: relative; z-index: 1; }
-        .page-header h1 { font-family: 'Amarna', sans-serif; font-size: 2.5rem; margin-bottom: 10px; }
+        .page-header h1 { font-family: 'Fraunces', Georgia, serif; font-size: 2.2rem; margin-bottom: 10px; letter-spacing: -0.02em; }
         .page-header p { opacity: 0.9; color: var(--secondary); }
         
         .header-flower {
@@ -47,15 +50,15 @@
         .header-flower-right { top: 80px; right: 20px; transform: rotate(15deg) scaleX(-1); }
         
         .alert-section { padding: 40px 20px; max-width: 1200px; margin: 0 auto; }
-        .section-title { text-align: left; margin-bottom: 5px; color: var(--white); }
+        .section-title { text-align: left; margin-bottom: 5px; color: var(--white); font-family: 'Fraunces', Georgia, serif; font-size: 1.8rem; letter-spacing: -0.02em; }
         
         .alert-form-container {
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 30px;
-            margin-bottom: 30px;
-            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.06);
+            backdrop-filter: blur(8px);
+            border-radius: 14px;
+            padding: 28px;
+            margin-bottom: 28px;
+            border: 1px solid rgba(255,255,255,0.1);
         }
         
         .form-group { margin-bottom: 20px; }
@@ -89,23 +92,23 @@
         }
         
         .alert-card {
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
+            background: rgba(255,255,255,0.06);
+            backdrop-filter: blur(8px);
             border-radius: 12px;
-            padding: 25px;
-            border: 1px solid rgba(255,255,255,0.2);
-            transition: transform 0.3s, box-shadow 0.3s;
+            padding: 22px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: border-color 0.2s;
         }
         
         .alert-card:hover {
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            border-color: rgba(255,255,255,0.2);
         }
         
         .alert-card h3 {
             color: var(--white);
             margin-bottom: 12px;
-            font-size: 1.2rem;
-            font-family: 'Amarna', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
         }
         
         .alert-card p {
@@ -129,21 +132,22 @@
         .status-danger { background: #dc3545; color: white; }
         
         .recent-alerts {
-            background: rgba(255,255,255,0.05);
+            background: rgba(255,255,255,0.04);
             border-radius: 12px;
-            padding: 20px;
-            margin-top: 20px;
+            padding: 22px;
+            margin-top: 24px;
+            border: 1px solid rgba(255,255,255,0.08);
         }
         
         .alert-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 8px;
+            padding: 14px 16px;
+            background: rgba(255,255,255,0.06);
+            border-radius: 10px;
             margin-bottom: 10px;
-            border-left: 4px solid var(--secondary);
+            border-left: 3px solid var(--secondary);
         }
         
         .alert-item:last-child { margin-bottom: 0; }
@@ -165,15 +169,15 @@
         }
         
         .modal-content {
-            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+            background: var(--primary-dark);
             margin: 5% auto;
             padding: 0;
-            border-radius: 15px;
+            border-radius: 14px;
             width: 90%;
-            max-width: 500px;
+            max-width: 480px;
             max-height: 90vh;
             overflow-y: auto;
-            border: 1px solid rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.1);
         }
         
         .modal-header {
@@ -184,7 +188,7 @@
             border-bottom: 1px solid rgba(255,255,255,0.2);
         }
         
-        .modal-header h3 { color: var(--white); margin: 0; font-family: 'Amarna', sans-serif; }
+        .modal-header h3 { color: var(--white); margin: 0; font-family: 'Fraunces', Georgia, serif; }
         
         .close {
             color: var(--white);
@@ -284,28 +288,28 @@
             <img src="/static/images/grey.png" alt="" class="header-flower header-flower-left">
             <img src="/static/images/grey.png" alt="" class="header-flower header-flower-right">
             <div class="page-header-content">
-                <h1>Disease Alert System</h1>
-                <p>Community disease reporting and alerts for farmers</p>
-                <small style="color: var(--secondary); font-weight: 500;">Demo mode - All farmers get alerts when diseases are reported</small>
+                <h1>Heads up from neighbors</h1>
+                <p>When something's spreading, everyone should know</p>
+                <small style="color: var(--secondary); font-weight: 500;">Demo mode - Everyone gets alerts when diseases are reported</small>
             </div>
         </div>
 
         <div class="alert-section">
             <!-- Demo info section -->
-            <h2 class="section-title">Community Disease Alerts</h2>
-            <p style="color: rgba(255,255,255,0.8); margin-bottom: 15px;">Report diseases and help protect the farming community</p>
+            <h2 class="section-title">What's going around</h2>
+            <p style="color: rgba(255,255,255,0.8); margin-bottom: 15px;">See something? Say something. Help your neighbors out.</p>
             
             <div style="background: rgba(255,193,7,0.1); border: 1px solid rgba(255,193,7,0.3); border-radius: 8px; padding: 12px; margin-bottom: 20px;">
                 <p style="color: var(--secondary); margin: 0; font-size: 0.9rem;"><strong>Demo Mode:</strong> Location set to "Bharatpur" - All farmers receive alerts when diseases are reported</p>
             </div>
 
             <!-- Features section -->
-            <h2 class="section-title">How it works</h2>
+            <h2 class="section-title">How this helps</h2>
             <div class="alert-grid">
                 <div class="alert-card">
                     <span class="alert-status status-active">Active</span>
-                    <h3>Instant Community Alerts</h3>
-                    <p>All farmers in the community get notified immediately when diseases are reported. No registration needed.</p>
+                    <h3>Quick heads up</h3>
+                    <p>When someone spots a problem, everyone nearby finds out fast. No sign-up needed.</p>
                 </div>
 
                 <div class="alert-card">
@@ -344,7 +348,7 @@
 
             <!-- Recent alerts -->
             <div class="recent-alerts">
-                <h3 style="color: var(--white); margin-bottom: 20px;">What's been reported lately</h3>
+                <h3 style="color: var(--white); margin-bottom: 20px; font-family: 'Fraunces', Georgia, serif;">Recent reports</h3>
                 <div class="alert-item">
                     <div class="alert-info">
                         <h4>Late Blight on Potatoes</h4>
@@ -445,7 +449,7 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Kya dekh rahe ho....haa?.</p>
+                <p>Built for the folks who feed us all.</p>
             </div>
         </div>
     </footer>

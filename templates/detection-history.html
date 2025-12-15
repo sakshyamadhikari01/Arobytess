@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detection History - Gaun Roots</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="stylesheet" href="/static/css/detection-history.css">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Mobile slide menu -->
+    <div class="slider-menu" id="sliderMenu">
+        <div class="slider-header">
+            <span class="slider-title">Menu</span>
+            <button class="slider-close" id="sliderClose">X</button>
+        </div>
+        <ul class="slider-nav">
+            <li><a href="home.html">Home</a></li>
+            <li><a href="ai-detection.html">AI Detection</a></li>
+            <li><a href="fertilizers.html">Find Fertilizers</a></li>
+            <li><a href="blogs.html">Agro Blogs</a></li>
+            <li><a href="community.html">Community</a></li>
+            <li><a href="profile.html">Profile</a></li>
+            <li><a href="login.html">Login</a></li>
+        </ul>
+    </div>
+    <div class="slider-overlay" id="sliderOverlay"></div>
+    
+    <!-- Menu toggle button -->
+    <button class="menu-toggle" id="menuToggle">
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+    </button>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="home.html" class="logo">
+                <img src="/static/images/groot.png" alt="Logo" class="logo-img">
+                Gaun Roots
+            </a>
+            <ul class="nav-menu">
+                <li><a href="home.html" class="nav-link">Home</a></li>
+                <li><a href="ai-detection.html" class="nav-link">AI Detection</a></li>
+                <li><a href="fertilizers.html" class="nav-link">Find Fertilizers</a></li>
+                <li><a href="blogs.html" class="nav-link">Agro Blogs</a></li>
+                <li><a href="community.html" class="nav-link">Community</a></li>
+                <li><a href="profile.html" class="nav-link">Profile</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main content -->
+    <section class="history-page">
+        <div class="history-header">
+            <a href="ai-detection.html" class="back-btn">← Back to Detection</a>
+            <h1>Detection History</h1>
+            <p>Your previous plant scans and results</p>
+        </div>
+
+        <div class="history-container">
+            <!-- Left side: History list -->
+            <div class="history-list-panel">
+                <div class="panel-header">
+                    <h2>Past Scans</h2>
+                    <span class="scan-count" id="scanCount">0 scans</span>
+                </div>
+                <div class="history-list" id="historyList">
+                    <!-- History items will be loaded here -->
+                    <div class="empty-state" id="emptyState">
+                        <span class="empty-icon"></span>
+                        <p>No scans yet</p>
+                        <a href="ai-detection.html" class="btn btn-primary">Start Scanning</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right side: Selected scan details -->
+            <div class="detail-panel" id="detailPanel">
+                <div class="detail-placeholder" id="detailPlaceholder">
+                    <span class="placeholder-icon"></span>
+                    <p>Select a scan to view details</p>
+                </div>
+                <div class="detail-content" id="detailContent" style="display:none;">
+                    <div class="detail-image-section">
+                        <img id="detailImage" alt="Scanned plant">
+                    </div>
+                    <div class="detail-info-section">
+                        <div class="detail-status" id="detailStatus"></div>
+                        <div class="detail-meta">
+                            <span class="detail-date" id="detailDate"></span>
+                            <span class="detail-confidence" id="detailConfidence"></span>
+                        </div>
+                        <div class="detail-actions">
+                            <button class="btn btn-outline btn-sm" onclick="deleteSelectedRecord()">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="/static/js/detection-history.js"></script>
+    <script>
+    // Mobile menu handlers
+    var menuToggle = document.getElementById('menuToggle');
+    var sliderMenu = document.getElementById('sliderMenu');
+    var sliderClose = document.getElementById('sliderClose');
+    var sliderOverlay = document.getElementById('sliderOverlay');
+
+    function openMobileMenu() {
+        sliderMenu.classList.add('active');
+        sliderOverlay.classList.add('active');
+    }
+
+    function closeMobileMenu() {
+        sliderMenu.classList.remove('active');
+        sliderOverlay.classList.remove('active');
+    }
+
+    menuToggle.addEventListener('click', openMobileMenu);
+    sliderClose.addEventListener('click', closeMobileMenu);
+    sliderOverlay.addEventListener('click', closeMobileMenu);
+
+    var sliderLinks = document.querySelectorAll('.slider-nav a');
+    sliderLinks.forEach(function(link) {
+        link.addEventListener('click', closeMobileMenu);
+    });
+    </script>
+</body>
+</html>

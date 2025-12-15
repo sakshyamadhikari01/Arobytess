@@ -13,6 +13,7 @@ from PIL import Image
 import smtplib
 from email.mime.text import MIMEText
 import tensorflow as tf
+from datetime import datetime
 
 app = FastAPI()
 
@@ -26,6 +27,7 @@ USERS_FILE = os.path.join(DATA_DIR, "users.json")
 PRODUCTS_FILE = os.path.join(DATA_DIR, "products.json")
 ALERTS_FILE = os.path.join(DATA_DIR, "alert_registrations.json")
 DISEASE_REPORTS_FILE = os.path.join(DATA_DIR, "disease_reports.json")
+DETECTION_HISTORY_FILE = os.path.join(DATA_DIR, "detection_history.json")
 
 EMAIL_ADDRESS = os.getenv('EMAIL_ADDRESS')
 EMAIL_PASSWORD = os.getenv('EMAIL_PASSWORD')
@@ -33,6 +35,7 @@ COMMUNITY_EMAIL = os.getenv('COMMUNITY_EMAIL')
 
 plant_model = None
 PLANT_CLASSES = ["diseased", "healthy"]
+TOKEN_PRICE = 49.99
 
 
 def initialize_plant_model():
@@ -72,7 +75,6 @@ class UserUpdate(BaseModel):
     friends: Optional[list] = None
     tokens: Optional[int] = None
 
-
 class TokenPurchase(BaseModel):
     quantity: int
 
@@ -105,6 +107,12 @@ class EmailAlert(BaseModel):
     crop: Optional[str] = "Tomato"
     location: Optional[str] = "Kathmandu Valley"
 
+class DetectionRecord(BaseModel):
+    userId: int
+    image: str
+    prediction: str
+    confidence: float
+
 def read_json_file(filepath):
     if not os.path.exists(filepath):
         return []
@@ -114,6 +122,19 @@ def read_json_file(filepath):
 def write_json_file(filepath, data):
     with open(filepath, "w") as file:
         json.dump(data, file, indent=2)
+
+def get_current_month():
+    return datetime.now().strftime("%Y-%m")
+
+def check_and_reset_monthly_tokens(user):
+    current_month = get_current_month()
+    last_reset = user.get("lastTokenReset", "")
+    
+    if last_reset != current_month:
+        user["tokens"] = 5
+        user["lastTokenReset"] = current_month
+        return True
+    return False
 
 def prepare_image_for_prediction(image_data: str) -> np.ndarray:
     if ',' in image_data:
@@ -337,30 +358,41 @@ async def predict_plant_disease(data: ImageData):
     except Exception as err:
         raise HTTPException(status_code=500, detail=f"Prediction failed: {str(err)}")
 
-<<<<<<< Updated upstream
-=======
+
+# --- Detection History Endpoints ---
+
+@app.post("/api/detection-history")
+def save_detection(record: DetectionRecord):
+    history = read_json_file(DETECTION_HISTORY_FILE)
+    
+    new_record = {
+        "id": len(history) + 1,
+        "userId": record.userId,
+        "image": record.image,
+        "prediction": record.prediction,
+        "confidence": record.confidence,
+        "timestamp": datetime.now().isoformat()
+    }
+    history.append(new_record)
+    write_json_file(DETECTION_HISTORY_FILE, history)
+    return new_record
+
+@app.get("/api/detection-history/{user_id}")
+def get_detection_history(user_id: int):
+    history = read_json_file(DETECTION_HISTORY_FILE)
+    user_history = [h for h in history if h["userId"] == user_id]
+    return sorted(user_history, key=lambda x: x["timestamp"], reverse=True)
+
+@app.delete("/api/detection-history/{record_id}")
+def delete_detection_record(record_id: int):
+    history = read_json_file(DETECTION_HISTORY_FILE)
+    history = [h for h in history if h["id"] != record_id]
+    write_json_file(DETECTION_HISTORY_FILE, history)
+    return {"message": "Record deleted"}
+
 
 # --- User Management Endpoints ---
 
-def get_current_month():
-    """Get current month in YYYY-MM format"""
-    from datetime import datetime
-    return datetime.now().strftime("%Y-%m")
-
-
-def check_and_reset_monthly_tokens(user):
-    """Check if user needs monthly token reset (5 free tokens)"""
-    current_month = get_current_month()
-    last_reset = user.get("lastTokenReset", "")
-    
-    if last_reset != current_month:
-        user["tokens"] = 5  # Free monthly tokens
-        user["lastTokenReset"] = current_month
-        return True
-    return False
-
-
->>>>>>> Stashed changes
 @app.post("/api/users/register")
 def register_user(user: UserCreate):
     users = read_json_file(USERS_FILE)
@@ -375,7 +407,7 @@ def register_user(user: UserCreate):
         "type": user.type,
         "credits": 0,
         "friends": [],
-        "tokens": 5,  # Free 5 tokens on registration
+        "tokens": 5,
         "lastTokenReset": get_current_month()
     }
     users.append(new_user)
@@ -388,7 +420,6 @@ def login_user(user: UserLogin):
     
     for i, u in enumerate(users):
         if u["name"].lower() == user.name.lower() and u["type"] == user.type:
-            # Check and reset monthly tokens if needed
             if check_and_reset_monthly_tokens(users[i]):
                 write_json_file(USERS_FILE, users)
             return users[i]
@@ -450,22 +481,15 @@ def add_friend(user_id: int, friend_name: str):
     
     raise HTTPException(status_code=404, detail="User not found")
 
-<<<<<<< Updated upstream
-=======
 
 # --- Token System Endpoints ---
 
-TOKEN_PRICE = 49.99  # Rs per token
-
-
 @app.get("/api/users/{user_id}/tokens")
 def get_user_tokens(user_id: int):
-    """Get user's current token balance"""
     users = read_json_file(USERS_FILE)
     
     for i, u in enumerate(users):
         if u["id"] == user_id:
-            # Check and reset monthly tokens if needed
             if check_and_reset_monthly_tokens(users[i]):
                 write_json_file(USERS_FILE, users)
             return {
@@ -479,7 +503,6 @@ def get_user_tokens(user_id: int):
 
 @app.post("/api/users/{user_id}/purchase-tokens")
 def purchase_tokens(user_id: int, purchase: TokenPurchase):
-    """Purchase additional tokens (Rs 49.99 per token)"""
     if purchase.quantity < 1:
         raise HTTPException(status_code=400, detail="Quantity must be at least 1")
     
@@ -504,12 +527,10 @@ def purchase_tokens(user_id: int, purchase: TokenPurchase):
 
 @app.post("/api/users/{user_id}/use-token")
 def use_token(user_id: int):
-    """Consume one token for a scan"""
     users = read_json_file(USERS_FILE)
     
     for i, u in enumerate(users):
         if u["id"] == user_id:
-            # Check and reset monthly tokens if needed
             check_and_reset_monthly_tokens(users[i])
             
             current_tokens = users[i].get("tokens", 0)
@@ -532,7 +553,6 @@ def use_token(user_id: int):
 
 # --- Product Management Endpoints ---
 
->>>>>>> Stashed changes
 @app.get("/api/products")
 def get_products():
     return read_json_file(PRODUCTS_FILE)

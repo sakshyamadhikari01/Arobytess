@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Plant Disease Detection - Gaun Roots</title>
+    <title>Plant Check - Gaun Roots</title>
     <link rel="stylesheet" href="/static/css/styles.css">
     <link rel="stylesheet" href="/static/css/ai-detection.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Amarna:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&display=swap" rel="stylesheet">
 </head>
 <body>
     <!-- Mobile slide menu -->
@@ -19,6 +19,7 @@
         <ul class="slider-nav">
             <li><a href="home.html">Home</a></li>
             <li><a href="ai-detection.html">AI Detection</a></li>
+            <li><a href="detection-history.html">Detection History</a></li>
             <li><a href="fertilizers.html">Find Fertilizers</a></li>
             <li><a href="blogs.html">Agro Blogs</a></li>
             <li><a href="community.html">Community</a></li>
@@ -56,8 +57,21 @@
     <!-- Main detection interface -->
     <section class="detection-page">
         <div class="detection-header">
-            <h1>Plant Disease Detection</h1>
-            <p>Snap a photo of your plant and we'll try to figure out what's wrong</p>
+            <h1>What's wrong with my plant?</h1>
+            <p>Take a photo and we'll help you figure it out</p>
+            
+            <!-- Photo Tips -->
+            <div class="photo-tips">
+                <h3>Tips for Best Results</h3>
+                <ul>
+                    <li>Use a phone with a clear camera (wipe the lens first).</li>
+                    <li>Go to bright shade (not direct sun, not dark).</li>
+                    <li>Hold the phone about 30–50 cm from the leaf/diseased area.</li>
+                    <li>Make sure the sick part is in the center and in focus, then take the photo.</li>
+                    <li>Avoid strong shadows, water drops, and other plants in the background.</li>
+                    <li>Take 3 photos: close-up of the spot, full leaf, and part of the plant/field.</li>
+                </ul>
+            </div>
             
             <!-- Token Balance Display -->
             <div class="token-info">
@@ -66,6 +80,7 @@
                     <span>Tokens: <strong id="tokenBalance">0</strong></span>
                 </div>
                 <button class="btn btn-outline btn-sm" onclick="showBuyTokensModal()">Buy Tokens</button>
+                <button class="btn btn-outline btn-sm" onclick="window.location.href='detection-history.html'">View History</button>
                 <p class="token-hint">5 free tokens every month • Rs 49.99 per extra token</p>
             </div>
         </div>

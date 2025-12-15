@@ -1,108 +1,132 @@
 /*
  * Login Page Styles
- * Authentication forms and modals
+ * Authentication forms - warm and inviting
  */
 
 .login-container {
     min-height: 100vh;
-    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 50%, var(--primary-light) 100%);
+    background: var(--primary-dark);
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 20px;
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+}
+
+.login-container::before {
+    content: '';
+    position: absolute;
+    top: -30%;
+    right: -15%;
+    width: 60%;
+    height: 120%;
+    background: radial-gradient(ellipse, rgba(61, 107, 79, 0.35) 0%, transparent 65%);
+    pointer-events: none;
 }
 
 .login-card {
     background: var(--white);
-    border-radius: 20px;
-    padding: 40px;
+    border-radius: 16px;
+    padding: 36px 32px;
     width: 100%;
-    max-width: 420px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    max-width: 400px;
+    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.2);
+    position: relative;
 }
 
 .login-header {
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 28px;
 }
 
 .login-logo {
-    width: 80px;
-    height: 80px;
+    width: 72px;
+    height: 72px;
     border-radius: 50%;
-    margin-bottom: 15px;
+    margin-bottom: 14px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
 .login-header h1 {
-    font-family: 'Amarna', sans-serif;
+    font-family: 'Fraunces', Georgia, serif;
     color: var(--primary-dark);
-    font-size: 2rem;
-    margin-bottom: 8px;
+    font-size: 1.75rem;
+    margin-bottom: 6px;
+    letter-spacing: -0.02em;
 }
 
 .login-header p {
     color: var(--text-light);
-    font-size: 0.95rem;
+    font-size: 0.9rem;
 }
 
 .user-type-tabs {
     display: flex;
-    gap: 10px;
-    margin-bottom: 25px;
+    gap: 8px;
+    margin-bottom: 24px;
 }
 
 .tab-btn {
     flex: 1;
-    padding: 12px 20px;
-    border: 2px solid var(--primary-dark);
+    padding: 11px 16px;
+    border: 2px solid var(--primary);
     background: transparent;
-    color: var(--primary-dark);
+    color: var(--primary);
     border-radius: 10px;
-    font-family: 'Poppins', sans-serif;
-    font-weight: 500;
-    font-size: 1rem;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    font-size: 0.9rem;
     cursor: pointer;
-    transition: background 0.3s, color 0.3s;
+    transition: background 0.2s, color 0.2s, transform 0.15s;
 }
 
+.tab-btn:hover {
+    background: rgba(35, 77, 50, 0.08);
+}
 
+.tab-btn:active {
+    transform: scale(0.97);
+}
 
 .tab-btn.active {
-    background: var(--primary-dark);
+    background: var(--primary);
     color: var(--white);
 }
 
 .login-form {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 18px;
 }
 
 .form-group {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
 }
 
 .form-group label {
-    font-weight: 500;
+    font-weight: 600;
     color: var(--text-dark);
-    font-size: 0.95rem;
+    font-size: 0.9rem;
 }
 
 .form-group input {
-    padding: 14px 18px;
-    border: 2px solid #e0e0e0;
+    padding: 13px 16px;
+    border: 2px solid #e5e5e5;
     border-radius: 10px;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'DM Sans', sans-serif;
     font-size: 1rem;
-    transition: border-color 0.3s, box-shadow 0.3s;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    background: #fafafa;
 }
 
 .form-group input:focus {
     outline: none;
-    border-color: var(--primary-dark);
-    box-shadow: 0 0 0 3px rgba(26, 71, 42, 0.1);
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(35, 77, 50, 0.1);
+    background: var(--white);
 }
 
 .form-group input::placeholder {
@@ -112,33 +136,36 @@
 .login-btn {
     width: 100%;
     padding: 14px;
-    font-size: 1.1rem;
-    margin-top: 10px;
+    font-size: 1rem;
+    margin-top: 8px;
 }
 
 .login-footer {
     text-align: center;
-    margin-top: 25px;
+    margin-top: 24px;
 }
 
 .login-footer p {
     color: var(--text-light);
-    margin-bottom: 15px;
+    margin-bottom: 14px;
+    font-size: 0.9rem;
 }
 
 .login-footer a {
-    color: var(--primary-dark);
+    color: var(--primary);
     text-decoration: none;
-    font-weight: 500;
-    transition: color 0.3s;
+    font-weight: 600;
+    transition: color 0.2s;
 }
 
-
+.login-footer a:hover {
+    text-decoration: underline;
+}
 
 .back-home {
     display: inline-block;
     color: var(--text-light);
-    font-size: 0.9rem;
+    font-size: 0.85rem;
 }
 
 /* Modal styles */
@@ -146,16 +173,16 @@
     position: fixed;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%) scale(0.9);
+    transform: translate(-50%, -50%) scale(0.95);
     background: var(--white);
-    border-radius: 20px;
-    padding: 40px;
+    border-radius: 16px;
+    padding: 36px 32px;
     width: 90%;
-    max-width: 420px;
+    max-width: 400px;
     z-index: 2001;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+    transition: opacity 0.25s ease, visibility 0.25s ease, transform 0.25s ease;
 }
 
 .modal.active {
@@ -170,11 +197,11 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(0, 0, 0, 0.5);
     z-index: 2000;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.3s, visibility 0.3s;
+    transition: opacity 0.25s;
 }
 
 .modal-overlay.active {
@@ -184,46 +211,51 @@
 
 .modal-close {
     position: absolute;
-    top: 15px;
-    right: 15px;
+    top: 14px;
+    right: 14px;
     background: none;
     border: none;
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     color: var(--text-light);
     cursor: pointer;
-    transition: color 0.3s;
+    padding: 4px;
+    transition: color 0.2s;
 }
 
-
+.modal-close:hover {
+    color: var(--text-dark);
+}
 
 .modal-content h2 {
-    font-family: 'Amarna', sans-serif;
+    font-family: 'Fraunces', Georgia, serif;
     color: var(--primary-dark);
-    font-size: 1.8rem;
+    font-size: 1.6rem;
     text-align: center;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
+    letter-spacing: -0.02em;
 }
 
 .modal-content p {
     color: var(--text-light);
     text-align: center;
-    margin-bottom: 25px;
+    margin-bottom: 22px;
+    font-size: 0.9rem;
 }
 
 /* Mobile adjustments */
 @media (max-width: 480px) {
     .login-card,
     .modal {
-        padding: 30px 25px;
+        padding: 28px 22px;
     }
     
     .login-header h1 {
-        font-size: 1.6rem;
+        font-size: 1.5rem;
     }
     
     .tab-btn {
-        padding: 10px 15px;
-        font-size: 0.9rem;
+        padding: 10px 12px;
+        font-size: 0.85rem;
     }
     
     .login-logo {

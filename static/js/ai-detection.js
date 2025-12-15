@@ -312,10 +312,34 @@ async function runAnalysis() {
         var analysisResult = await response.json();
         showResults(analysisResult);
         
+        // Save to detection history
+        saveToHistory(analysisResult);
+        
     } catch (err) {
         alert('Analysis error: ' + err.message);
     } finally {
         loadingScreen.style.display = 'none';
+    }
+}
+
+// Save detection result to history
+async function saveToHistory(result) {
+    var user = getCurrentUser();
+    if (!user) return;
+    
+    try {
+        await fetch('/api/detection-history', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                userId: user.id,
+                image: selectedImageData,
+                prediction: result.prediction,
+                confidence: result.confidence
+            })
+        });
+    } catch (err) {
+        console.error('Failed to save to history:', err);
     }
 }
 
@@ -344,7 +368,10 @@ function showResults(result) {
         detailsSection.innerHTML = '<h4>Good News!</h4>' +
             '<p>Your plant looks healthy. Keep up the good care and continue monitoring regularly.</p>';
     } else {
-        detailsSection.innerHTML = '<h4>Recommended Fertilizers</h4>' +
+        detailsSection.innerHTML = '<div class="accuracy-disclaimer">' +
+                '<p><strong>Note:</strong> This is partially accurate data. You will get a more accurate result from an agro vet within 1-2 business days.</p>' +
+            '</div>' +
+            '<h4>Recommended Fertilizers</h4>' +
             '<div class="fertilizer-recommendations">' +
                 '<div class="fertilizer-item">' +
                     '<strong>NPK 20-20-20</strong><br>' +
