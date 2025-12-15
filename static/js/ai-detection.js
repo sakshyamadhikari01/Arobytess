@@ -175,10 +175,124 @@ var resultsCard = document.getElementById('resultCard');
 
 analyzeButton.addEventListener('click', runAnalysis);
 
+// Token system variables
+var TOKEN_PRICE = 49.99;
+
+// Get current user from localStorage (uses same key as api.js)
+function getCurrentUser() {
+    var userData = localStorage.getItem('currentUser');
+    return userData ? JSON.parse(userData) : null;
+}
+
+// Update token display
+async function updateTokenDisplay() {
+    var user = getCurrentUser();
+    var tokenDisplay = document.getElementById('tokenBalance');
+    
+    if (!user || !tokenDisplay) return;
+    
+    try {
+        var response = await fetch('/api/users/' + user.id + '/tokens');
+        if (response.ok) {
+            var data = await response.json();
+            tokenDisplay.textContent = data.tokens;
+            // Update localStorage (uses same key as api.js)
+            user.tokens = data.tokens;
+            localStorage.setItem('currentUser', JSON.stringify(user));
+        }
+    } catch (err) {
+        console.error('Failed to fetch tokens:', err);
+    }
+}
+
+// Check if user has tokens before scanning
+async function checkAndUseToken() {
+    var user = getCurrentUser();
+    
+    if (!user) {
+        alert('Please login to use the AI detection feature');
+        window.location.href = 'login.html';
+        return false;
+    }
+    
+    try {
+        var response = await fetch('/api/users/' + user.id + '/use-token', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        });
+        
+        if (response.status === 402) {
+            // Insufficient tokens
+            showBuyTokensModal();
+            return false;
+        }
+        
+        if (!response.ok) {
+            throw new Error('Token check failed');
+        }
+        
+        var result = await response.json();
+        updateTokenDisplay();
+        return true;
+        
+    } catch (err) {
+        alert('Error: ' + err.message);
+        return false;
+    }
+}
+
+// Show buy tokens modal
+function showBuyTokensModal() {
+    var modal = document.getElementById('buyTokensModal');
+    if (modal) {
+        modal.style.display = 'flex';
+    }
+}
+
+// Hide buy tokens modal
+function hideBuyTokensModal() {
+    var modal = document.getElementById('buyTokensModal');
+    if (modal) {
+        modal.style.display = 'none';
+    }
+}
+
+// Purchase tokens
+async function purchaseTokens(quantity) {
+    var user = getCurrentUser();
+    if (!user) return;
+    
+    try {
+        var response = await fetch('/api/users/' + user.id + '/purchase-tokens', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ quantity: quantity })
+        });
+        
+        if (!response.ok) {
+            throw new Error('Purchase failed');
+        }
+        
+        var result = await response.json();
+        alert('Success! ' + result.message);
+        updateTokenDisplay();
+        hideBuyTokensModal();
+        
+    } catch (err) {
+        alert('Purchase error: ' + err.message);
+    }
+}
+
 // Send image to API for analysis
 async function runAnalysis() {
     if (!selectedImageData) {
         alert('Please upload or capture an image first');
+        return;
+    }
+    
+    // Check and consume token first
+    var hasToken = await checkAndUseToken();
+    if (!hasToken) {
         return;
     }
     
@@ -204,6 +318,11 @@ async function runAnalysis() {
         loadingScreen.style.display = 'none';
     }
 }
+
+// Initialize token display on page load
+document.addEventListener('DOMContentLoaded', function() {
+    updateTokenDisplay();
+});
 
 // Display analysis results
 function showResults(result) {

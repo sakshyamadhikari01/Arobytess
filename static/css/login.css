@@ -65,9 +65,7 @@
     transition: background 0.3s, color 0.3s;
 }
 
-.tab-btn:hover {
-    background: var(--accent);
-}
+
 
 .tab-btn.active {
     background: var(--primary-dark);
@@ -135,10 +133,7 @@
     transition: color 0.3s;
 }
 
-.login-footer a:hover {
-    color: var(--primary-light);
-    text-decoration: underline;
-}
+
 
 .back-home {
     display: inline-block;
@@ -199,9 +194,7 @@
     transition: color 0.3s;
 }
 
-.modal-close:hover {
-    color: var(--primary-dark);
-}
+
 
 .modal-content h2 {
     font-family: 'Amarna', sans-serif;

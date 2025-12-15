@@ -1,3 +1,8 @@
+/*
+ * Gaun Roots - Main Stylesheet
+ * Core styles and components for the agricultural platform
+ */
+
 @import url('https://fonts.cdnfonts.com/css/bogle');
 @import url('https://fonts.googleapis.com/css2?family=Amarna:ital,wght@0,100..700;1,100..700&display=swap');
 
@@ -8,17 +13,28 @@
 }
 
 :root {
-    --primary: #1a472a;
-    --primary-dark: #0d2818;
-    --primary-light: #2d5a3d;
-    --secondary: #c5d9be;
-    --accent: #e8f0e5;
-    --text-dark: #1b1b1b;
-    --text-light: #6c757d;
-    --white: #ffffff;
-    --light-green: #D2DCB6;
-    --nav-green: #276749;
-    --bg-light: #f8f9fa;
+    --forest-deep: #1a472a;
+    --forest-darker: #0d2818;
+    --forest-light: #2d5a3d;
+    --sage-green: #c5d9be;
+    --mint-cream: #e8f0e5;
+    --charcoal: #1b1b1b;
+    --slate: #6c757d;
+    --pure-white: #ffffff;
+    --pale-green: #D2DCB6;
+    --nav-forest: #276749;
+    --cloud-white: #f8f9fa;
+    --primary: var(--forest-deep);
+    --primary-dark: var(--forest-darker);
+    --primary-light: var(--forest-light);
+    --secondary: var(--sage-green);
+    --accent: var(--mint-cream);
+    --text-dark: var(--charcoal);
+    --text-light: var(--slate);
+    --white: var(--pure-white);
+    --light-green: var(--pale-green);
+    --nav-green: var(--nav-forest);
+    --bg-light: var(--cloud-white);
 }
 
 body {
@@ -32,6 +48,7 @@ body {
     margin: 0 auto;
     padding: 0 20px;
 }
+
 
 .menu-toggle {
     position: fixed;
@@ -49,14 +66,11 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.3s;
+    transition: background 0.3s, transform 0.3s;
     box-shadow: 0 2px 10px rgba(0,0,0,0.2);
 }
 
-.menu-toggle:hover {
-    background: var(--primary);
-    transform: scale(1.05);
-}
+
 
 .slider-menu {
     position: fixed;
@@ -66,7 +80,7 @@ body {
     height: 100vh;
     background: var(--nav-green);
     z-index: 1002;
-    transition: left 0.3s;
+    transition: left 0.3s ease;
     box-shadow: 2px 0 20px rgba(0,0,0,0.15);
 }
 
@@ -98,9 +112,7 @@ body {
     transition: transform 0.3s;
 }
 
-.slider-close:hover {
-    transform: scale(1.1);
-}
+
 
 .slider-nav {
     list-style: none;
@@ -119,14 +131,10 @@ body {
     color: var(--white);
     text-decoration: none;
     font-weight: 500;
-    transition: all 0.3s;
+    transition: background 0.3s, padding-left 0.3s, color 0.3s;
 }
 
-.slider-nav li a:hover {
-    background: rgba(255,255,255,0.1);
-    color: var(--light-green);
-    padding-left: 35px;
-}
+
 
 .slider-overlay {
     position: fixed;
@@ -138,7 +146,7 @@ body {
     z-index: 1001;
     opacity: 0;
     visibility: hidden;
-    transition: all 0.3s;
+    transition: opacity 0.3s, visibility 0.3s;
 }
 
 .slider-overlay.active {
@@ -159,7 +167,7 @@ body {
     justify-content: center;
     opacity: 0;
     visibility: hidden;
-    transition: all 0.4s ease;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
 }
 
 .fullpage-menu.active {
@@ -179,9 +187,7 @@ body {
     transition: transform 0.3s;
 }
 
-.fullpage-close:hover {
-    transform: scale(1.1);
-}
+
 
 .fullpage-nav {
     list-style: none;
@@ -192,7 +198,7 @@ body {
     margin: 20px 0;
     opacity: 0;
     transform: translateY(20px);
-    transition: all 0.4s ease;
+    transition: opacity 0.4s ease, transform 0.4s ease;
 }
 
 .fullpage-menu.active .fullpage-nav li {
@@ -215,9 +221,8 @@ body {
     transition: color 0.3s;
 }
 
-.fullpage-nav li a:hover {
-    color: var(--secondary);
-}
+
+
 
 .navbar {
     position: fixed;
@@ -227,7 +232,7 @@ body {
     background: var(--nav-green);
     padding: 15px 0;
     z-index: 1000;
-    transition: all 0.3s;
+    transition: background 0.3s, box-shadow 0.3s;
 }
 
 .navbar.scrolled {
@@ -274,7 +279,6 @@ body {
     transition: color 0.3s;
 }
 
-.nav-link:hover,
 .nav-link.active {
     color: var(--light-green);
 }
@@ -295,7 +299,7 @@ body {
     font-weight: 500;
     text-decoration: none;
     cursor: pointer;
-    transition: all 0.3s;
+    transition: color 0.3s;
     border: none;
     font-size: 1rem;
 }
@@ -305,10 +309,7 @@ body {
     color: var(--white);
 }
 
-.btn-primary:hover {
-    background: var(--primary);
-    transform: translateY(-2px);
-}
+
 
 .btn-outline {
     background: transparent;
@@ -316,10 +317,7 @@ body {
     border: 2px solid var(--white);
 }
 
-.btn-outline:hover {
-    background: var(--white);
-    color: var(--primary);
-}
+
 
 .hero {
     min-height: 100vh;
@@ -452,14 +450,10 @@ body {
     border-radius: 50%;
     font-size: 0.9rem;
     font-weight: 500;
-    transition: all 0.3s;
+    transition: background 0.3s, color 0.3s, transform 0.3s;
 }
 
-.social-icons a:hover {
-    background: var(--secondary);
-    color: var(--primary-dark);
-    transform: translateY(-3px);
-}
+
 
 .footer-bottom {
     border-top: 1px solid rgba(255,255,255,0.1);

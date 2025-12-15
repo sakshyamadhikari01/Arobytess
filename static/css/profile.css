@@ -134,9 +134,7 @@
     transition: background 0.3s;
 }
 
-.notification-item:hover {
-    background: rgba(255, 255, 255, 0.9);
-}
+
 
 .notification-item:last-child {
     margin-bottom: 0;
@@ -177,7 +175,7 @@
 /* Stats section */
 .profile-stats {
     display: flex;
-    gap: 20px;
+    gap: 15px;
     margin-bottom: 30px;
 }
 
@@ -185,14 +183,17 @@
     flex: 1;
     background: var(--accent);
     border-radius: 15px;
-    padding: 25px 20px;
+    padding: 20px 15px;
     text-align: center;
     transition: transform 0.3s;
 }
 
-.stat-box:hover {
-    transform: translateY(-5px);
+.stat-box:first-child {
+    background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+    border: 2px solid var(--primary);
 }
+
+
 
 .stat-value {
     display: block;
@@ -211,13 +212,16 @@
 /* Action buttons */
 .profile-actions {
     display: flex;
-    gap: 15px;
+    flex-wrap: wrap;
+    gap: 10px;
     margin-bottom: 30px;
 }
 
 .profile-actions .btn {
     flex: 1;
-    padding: 12px 20px;
+    min-width: 120px;
+    padding: 12px 15px;
+    font-size: 0.9rem;
 }
 
 .btn-outline-dark {
@@ -226,10 +230,7 @@
     border: 2px solid var(--primary-dark);
 }
 
-.btn-outline-dark:hover {
-    background: var(--primary-dark);
-    color: var(--white);
-}
+
 
 /* Friends section */
 .profile-section {
@@ -268,9 +269,7 @@
     transition: background 0.3s;
 }
 
-.friend-item:hover {
-    background: var(--accent);
-}
+
 
 .friend-avatar {
     width: 40px;
@@ -304,9 +303,7 @@
     padding: 12px 40px;
 }
 
-.btn-logout:hover {
-    background: #c82333;
-}
+
 
 /* Modal styles */
 .modal {
@@ -360,9 +357,7 @@
     cursor: pointer;
 }
 
-.modal-close:hover {
-    color: var(--primary-dark);
-}
+
 
 .modal h2 {
     font-family: 'Amarna', sans-serif;
@@ -403,8 +398,14 @@
     }
     
     .profile-stats {
-        flex-direction: column;
-        gap: 15px;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    
+    .stat-box {
+        flex: 1 1 45%;
+        min-width: 100px;
+        padding: 15px 10px;
     }
     
     .profile-actions {
@@ -412,6 +413,6 @@
     }
     
     .stat-value {
-        font-size: 2rem;
+        font-size: 1.8rem;
     }
 }

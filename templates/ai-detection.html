@@ -58,6 +58,16 @@
         <div class="detection-header">
             <h1>Plant Disease Detection</h1>
             <p>Snap a photo of your plant and we'll try to figure out what's wrong</p>
+            
+            <!-- Token Balance Display -->
+            <div class="token-info">
+                <div class="token-balance">
+                    <span class="token-icon">🪙</span>
+                    <span>Tokens: <strong id="tokenBalance">0</strong></span>
+                </div>
+                <button class="btn btn-outline btn-sm" onclick="showBuyTokensModal()">Buy Tokens</button>
+                <p class="token-hint">5 free tokens every month • Rs 49.99 per extra token</p>
+            </div>
         </div>
 
         <div class="detection-content">
@@ -117,6 +127,38 @@
             <p>Analyzing your plant...</p>
         </div>
     </section>
+
+    <!-- Buy Tokens Modal -->
+    <div class="modal-overlay" id="buyTokensModal" style="display:none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Buy Scan Tokens</h2>
+                <button class="modal-close" onclick="hideBuyTokensModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <p>You've run out of tokens! Purchase more to continue scanning your crops.</p>
+                <p class="price-info">Price: <strong>Rs 49.99</strong> per token</p>
+                
+                <div class="token-packages">
+                    <div class="token-package" onclick="purchaseTokens(1)">
+                        <span class="package-tokens">1 Token</span>
+                        <span class="package-price">Rs 49.99</span>
+                    </div>
+                    <div class="token-package popular" onclick="purchaseTokens(5)">
+                        <span class="package-badge">Popular</span>
+                        <span class="package-tokens">5 Tokens</span>
+                        <span class="package-price">Rs 249.95</span>
+                    </div>
+                    <div class="token-package" onclick="purchaseTokens(10)">
+                        <span class="package-tokens">10 Tokens</span>
+                        <span class="package-price">Rs 499.90</span>
+                    </div>
+                </div>
+                
+                <p class="token-note">   You get 5 free tokens every month!</p>
+            </div>
+        </div>
+    </div>
 
     <script src="/static/js/ai-detection.js"></script>
     <script>

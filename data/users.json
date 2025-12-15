@@ -3,14 +3,36 @@
     "id": 1,
     "name": "sakshyam",
     "type": "farmer",
-    "credits": 0,
-    "friends": []
+    "credits": 89,
+    "friends": [],
+    "tokens": 5,
+    "lastTokenReset": "2025-12"
   },
   {
     "id": 2,
     "name": "ankit",
     "type": "seller",
     "credits": 0,
-    "friends": []
+    "friends": [],
+    "tokens": 5,
+    "lastTokenReset": "2024-12"
+  },
+  {
+    "id": 3,
+    "name": "ankita",
+    "type": "farmer",
+    "credits": 0,
+    "friends": [],
+    "tokens": 5,
+    "lastTokenReset": "2024-12"
+  },
+  {
+    "id": 4,
+    "name": "ankit",
+    "type": "farmer",
+    "credits": 0,
+    "friends": [],
+    "tokens": 5,
+    "lastTokenReset": "2025-12"
   }
 ]

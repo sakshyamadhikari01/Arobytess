@@ -55,6 +55,10 @@
             <!-- Stats -->
             <div class="profile-stats">
                 <div class="stat-box">
+                    <span class="stat-value" id="tokensCount">5</span>
+                    <span class="stat-label">🎫 Tokens</span>
+                </div>
+                <div class="stat-box">
                     <span class="stat-value" id="creditsCount">0</span>
                     <span class="stat-label">Credits</span>
                 </div>
@@ -66,7 +70,8 @@
 
             <!-- Action buttons -->
             <div class="profile-actions">
-                <button class="btn btn-primary" id="addCreditsBtn">+ Add Credits</button>
+                <button class="btn btn-primary" id="buyTokensBtn">🎫 Buy Tokens</button>
+                <button class="btn btn-outline-dark" id="addCreditsBtn">+ Add Credits</button>
                 <button class="btn btn-outline-dark" id="addFriendBtn">+ Add Friend</button>
             </div>
 
@@ -139,7 +144,9 @@
 
         var credits = currentUser.credits || 0;
         var friends = currentUser.friends || [];
+        var tokens = currentUser.tokens || 0;
         
+        document.getElementById('tokensCount').textContent = tokens;
         document.getElementById('creditsCount').textContent = credits;
         document.getElementById('friendsCount').textContent = friends.length;
         displayFriendsList(friends);
@@ -177,6 +184,37 @@
 
     friendModalClose.addEventListener('click', hideModal);
     modalOverlay.addEventListener('click', hideModal);
+
+    // Buy tokens handler
+    document.getElementById('buyTokensBtn').addEventListener('click', async function() {
+        if (!isLoggedIn) {
+            alert('Please login first!');
+            window.location.href = 'login.html';
+            return;
+        }
+        
+        var quantity = prompt('How many tokens to buy? (Rs 49.99 per token)', '5');
+        if (quantity && !isNaN(quantity) && parseInt(quantity) > 0) {
+            try {
+                var response = await fetch('/api/users/' + currentUser.id + '/purchase-tokens', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ quantity: parseInt(quantity) })
+                });
+                var result = await response.json();
+                if (response.ok) {
+                    currentUser.tokens = result.tokens;
+                    setCurrentUser(currentUser);
+                    document.getElementById('tokensCount').textContent = result.tokens;
+                    alert('Successfully purchased ' + quantity + ' token(s) for Rs ' + result.totalCost.toFixed(2));
+                } else {
+                    alert(result.detail || 'Failed to purchase tokens');
+                }
+            } catch (err) {
+                alert('Failed to purchase tokens');
+            }
+        }
+    });
 
     // Add credits handler
     document.getElementById('addCreditsBtn').addEventListener('click', async function() {

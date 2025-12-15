@@ -70,6 +70,11 @@ class UserLogin(BaseModel):
 class UserUpdate(BaseModel):
     credits: Optional[int] = None
     friends: Optional[list] = None
+    tokens: Optional[int] = None
+
+
+class TokenPurchase(BaseModel):
+    quantity: int
 
 class ProductCreate(BaseModel):
     name: str
@@ -332,6 +337,30 @@ async def predict_plant_disease(data: ImageData):
     except Exception as err:
         raise HTTPException(status_code=500, detail=f"Prediction failed: {str(err)}")
 
+<<<<<<< Updated upstream
+=======
+
+# --- User Management Endpoints ---
+
+def get_current_month():
+    """Get current month in YYYY-MM format"""
+    from datetime import datetime
+    return datetime.now().strftime("%Y-%m")
+
+
+def check_and_reset_monthly_tokens(user):
+    """Check if user needs monthly token reset (5 free tokens)"""
+    current_month = get_current_month()
+    last_reset = user.get("lastTokenReset", "")
+    
+    if last_reset != current_month:
+        user["tokens"] = 5  # Free monthly tokens
+        user["lastTokenReset"] = current_month
+        return True
+    return False
+
+
+>>>>>>> Stashed changes
 @app.post("/api/users/register")
 def register_user(user: UserCreate):
     users = read_json_file(USERS_FILE)
@@ -345,7 +374,9 @@ def register_user(user: UserCreate):
         "name": user.name,
         "type": user.type,
         "credits": 0,
-        "friends": []
+        "friends": [],
+        "tokens": 5,  # Free 5 tokens on registration
+        "lastTokenReset": get_current_month()
     }
     users.append(new_user)
     write_json_file(USERS_FILE, users)
@@ -355,9 +386,12 @@ def register_user(user: UserCreate):
 def login_user(user: UserLogin):
     users = read_json_file(USERS_FILE)
     
-    for u in users:
+    for i, u in enumerate(users):
         if u["name"].lower() == user.name.lower() and u["type"] == user.type:
-            return u
+            # Check and reset monthly tokens if needed
+            if check_and_reset_monthly_tokens(users[i]):
+                write_json_file(USERS_FILE, users)
+            return users[i]
     
     raise HTTPException(status_code=404, detail="User not found")
 
@@ -381,6 +415,8 @@ def update_user(user_id: int, update: UserUpdate):
                 users[i]["credits"] = update.credits
             if update.friends is not None:
                 users[i]["friends"] = update.friends
+            if update.tokens is not None:
+                users[i]["tokens"] = update.tokens
             write_json_file(USERS_FILE, users)
             return users[i]
     
@@ -414,6 +450,89 @@ def add_friend(user_id: int, friend_name: str):
     
     raise HTTPException(status_code=404, detail="User not found")
 
+<<<<<<< Updated upstream
+=======
+
+# --- Token System Endpoints ---
+
+TOKEN_PRICE = 49.99  # Rs per token
+
+
+@app.get("/api/users/{user_id}/tokens")
+def get_user_tokens(user_id: int):
+    """Get user's current token balance"""
+    users = read_json_file(USERS_FILE)
+    
+    for i, u in enumerate(users):
+        if u["id"] == user_id:
+            # Check and reset monthly tokens if needed
+            if check_and_reset_monthly_tokens(users[i]):
+                write_json_file(USERS_FILE, users)
+            return {
+                "tokens": users[i].get("tokens", 0),
+                "lastReset": users[i].get("lastTokenReset", ""),
+                "pricePerToken": TOKEN_PRICE
+            }
+    
+    raise HTTPException(status_code=404, detail="User not found")
+
+
+@app.post("/api/users/{user_id}/purchase-tokens")
+def purchase_tokens(user_id: int, purchase: TokenPurchase):
+    """Purchase additional tokens (Rs 49.99 per token)"""
+    if purchase.quantity < 1:
+        raise HTTPException(status_code=400, detail="Quantity must be at least 1")
+    
+    users = read_json_file(USERS_FILE)
+    
+    for i, u in enumerate(users):
+        if u["id"] == user_id:
+            current_tokens = users[i].get("tokens", 0)
+            users[i]["tokens"] = current_tokens + purchase.quantity
+            write_json_file(USERS_FILE, users)
+            
+            total_cost = purchase.quantity * TOKEN_PRICE
+            return {
+                "success": True,
+                "message": f"Purchased {purchase.quantity} token(s) for Rs {total_cost:.2f}",
+                "tokens": users[i]["tokens"],
+                "totalCost": total_cost
+            }
+    
+    raise HTTPException(status_code=404, detail="User not found")
+
+
+@app.post("/api/users/{user_id}/use-token")
+def use_token(user_id: int):
+    """Consume one token for a scan"""
+    users = read_json_file(USERS_FILE)
+    
+    for i, u in enumerate(users):
+        if u["id"] == user_id:
+            # Check and reset monthly tokens if needed
+            check_and_reset_monthly_tokens(users[i])
+            
+            current_tokens = users[i].get("tokens", 0)
+            if current_tokens < 1:
+                raise HTTPException(
+                    status_code=402, 
+                    detail="Insufficient tokens. Please purchase more tokens to continue scanning."
+                )
+            
+            users[i]["tokens"] = current_tokens - 1
+            write_json_file(USERS_FILE, users)
+            
+            return {
+                "success": True,
+                "remainingTokens": users[i]["tokens"]
+            }
+    
+    raise HTTPException(status_code=404, detail="User not found")
+
+
+# --- Product Management Endpoints ---
+
+>>>>>>> Stashed changes
 @app.get("/api/products")
 def get_products():
     return read_json_file(PRODUCTS_FILE)
