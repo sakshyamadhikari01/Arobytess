@@ -34,5 +34,14 @@
     "friends": [],
     "tokens": 3,
     "lastTokenReset": "2025-12"
+  },
+  {
+    "id": 5,
+    "name": "rawsim",
+    "type": "farmer",
+    "credits": 0,
+    "friends": [],
+    "tokens": 13,
+    "lastTokenReset": "2025-12"
   }
 ]

@@ -257,16 +257,35 @@ function hideBuyTokensModal() {
     }
 }
 
-// Purchase tokens
-async function purchaseTokens(quantity) {
+// Selected token quantity
+var selectedTokenQuantity = 5;
+
+// Initialize token package selection
+document.addEventListener('DOMContentLoaded', function() {
+    var packages = document.querySelectorAll('.token-package');
+    packages.forEach(function(pkg) {
+        pkg.addEventListener('click', function() {
+            packages.forEach(function(p) { p.classList.remove('selected'); });
+            pkg.classList.add('selected');
+            selectedTokenQuantity = parseInt(pkg.dataset.quantity);
+        });
+    });
+});
+
+// Demo purchase (without real payment)
+async function purchaseTokensDemo() {
     var user = getCurrentUser();
-    if (!user) return;
+    if (!user) {
+        alert('Please login first');
+        window.location.href = 'login.html';
+        return;
+    }
     
     try {
         var response = await fetch('/api/users/' + user.id + '/purchase-tokens', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ quantity: quantity })
+            body: JSON.stringify({ quantity: selectedTokenQuantity })
         });
         
         if (!response.ok) {
@@ -281,6 +300,17 @@ async function purchaseTokens(quantity) {
     } catch (err) {
         alert('Purchase error: ' + err.message);
     }
+}
+
+// Pay with Khalti (Coming Soon)
+function payWithKhalti() {
+    alert('Khalti payment coming soon! Use Demo Purchase for now.');
+}
+
+// Legacy function for backward compatibility
+async function purchaseTokens(quantity) {
+    selectedTokenQuantity = quantity;
+    purchaseTokensDemo();
 }
 
 // Send image to API for analysis

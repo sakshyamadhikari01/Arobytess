@@ -103,6 +103,30 @@
                 </form>
             </div>
         </div>
+
+        <!-- Buy Tokens Modal -->
+        <div class="modal" id="buyTokensModal">
+            <div class="modal-content">
+                <button class="modal-close" id="tokenModalClose">✕</button>
+                <h2>🎫 Buy Tokens</h2>
+                <div class="token-purchase-info">
+                    <p class="token-price">Rs 49.99 per token</p>
+                </div>
+                <div class="form-group">
+                    <label for="tokenQuantity">Number of Tokens</label>
+                    <input type="number" id="tokenQuantity" min="1" value="5" placeholder="Enter quantity">
+                </div>
+                <div class="token-total">
+                    <span>Total:</span>
+                    <span id="tokenTotalPrice">Rs 249.95</span>
+                </div>
+                <div class="payment-buttons">
+                    <button class="btn btn-khalti" id="payWithKhaltiBtn">
+                        Pay with Khalti
+                    </button>
+                </div>
+            </div>
+        </div>
         <div class="modal-overlay" id="modalOverlay"></div>
     </div>
 
